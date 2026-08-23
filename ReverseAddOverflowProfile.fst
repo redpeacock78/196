@@ -322,6 +322,19 @@ let overflow_profile_relation_at_zero_impossible_at_10
     overflow_profile_relation_at_zero_is_1_or_11 xs;
     assert False)
 
+let overflow_profile_relation_at_zero_impossible_between_2_and_9
+  (xs:numeral 10)
+  : Lemma (requires (
+      xs <> [] /\
+      length (trace_digits xs) == length xs + 1 /\
+      nth (trace_carries xs) (length xs) == Some 1 /\
+      2 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 <= 9))
+    (ensures (~(trace_local_profile_relation xs 0))) =
+  introduce (trace_local_profile_relation xs 0) ==> False
+  with (
+    overflow_profile_relation_at_zero_is_1_or_11 xs;
+    assert False)
+
 // A no-overflow input whose outer sum is 6..9 produces a next-step
 // complement witness at the outer cell, regardless of the next final carry.
 let no_overflow_outer_sum_6_to_9_implies_next_witness
@@ -368,6 +381,68 @@ let no_overflow_outer_sum_6_to_9_implies_next_witness
         ~(trace_local_profile_relation (reverse_add xs) i))
       0;
     ())
+
+// With a low outer sum, a sufficiently high interior cell survives into the
+// next no-overflow trace; an overflow next step already fails at cell 0.
+let no_overflow_outer_sum_1_to_4_high_sum_15_implies_next_witness
+  (xs:numeral 10)
+  : Lemma (requires (
+      canonical xs /\ xs <> [] /\
+      length (trace_digits xs) == length xs /\
+      nth (trace_carries xs) (length xs) == Some 0 /\
+      1 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 <= 4 /\
+      exists (i:nat). i < length xs /\ trace_sum_at xs i >= 15))
+    (ensures (trace_local_profile_complement_witness (reverse_add xs))) =
+  trace_digits_equals_reverse_add xs;
+  let n : nat = length xs in
+  trace_carry_prefix_zero xs 0;
+  trace_equation_at xs 0;
+  assert (trace_carry_at xs 1 == 0);
+  no_overflow_trace_outer_sum_equation xs;
+  eliminate exists (i:nat).
+    i < length xs /\ trace_sum_at xs i >= 15
+  with (
+    let j : nat = n - 1 - i in
+    assert (j < n);
+    trace_equation_at xs i;
+    trace_equation_at xs j;
+    trace_sum_symmetric_at xs i;
+    assert (trace_carry_at xs (i + 1) == 1);
+    assert (trace_carry_at xs (j + 1) == 1);
+    rev_length (reverse_add xs);
+    assert (i < length (reverse_add xs));
+    nth_rev (reverse_add xs) i;
+    assert (trace_digit_at xs i == digit_at (reverse_add xs) i);
+    assert (trace_digit_at xs j == digit_at (reverse_add xs) j);
+    assert (trace_sum_at (reverse_add xs) i ==
+      trace_digit_at xs i + trace_digit_at xs j);
+    assert (trace_sum_at (reverse_add xs) i >= 10);
+    reverse_trace_output_length_case (reverse_add xs);
+    trace_output_length_carry_link
+      (reverse_add xs) (rev (reverse_add xs)) 0;
+    eliminate
+      (length (trace_digits (reverse_add xs)) == length (reverse_add xs) /\
+       nth (trace_carries (reverse_add xs))
+         (length (reverse_add xs)) == Some 0) \/
+      (length (trace_digits (reverse_add xs)) == length (reverse_add xs) + 1 /\
+       nth (trace_carries (reverse_add xs))
+         (length (reverse_add xs)) == Some 1)
+    with (
+      exists_intro
+        (fun (k:nat) -> k < length (reverse_add xs) /\
+          trace_sum_at (reverse_add xs) k >= 10)
+        i;
+      ())
+    and (
+      assert (trace_sum_at (reverse_add xs) 0 >= 2);
+      assert (trace_sum_at (reverse_add xs) 0 <= 9);
+      overflow_profile_relation_at_zero_impossible_between_2_and_9
+        (reverse_add xs);
+      exists_intro
+        (fun (k:nat) -> k <= length (reverse_add xs) /\
+          ~(trace_local_profile_relation (reverse_add xs) k))
+        0;
+      ()))
 
 let no_overflow_outer_sum_5_carry0_implies_next_witness
   (xs:numeral 10)
