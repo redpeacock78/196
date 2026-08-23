@@ -708,6 +708,34 @@ let local_profile_witness_17602285712176 () : Lemma (
     [8; 8; 0; 1; 0; 8; 7; 9; 1; 1; 0; 8; 8];
   ()
 
+let trace_profile_17602285712176 () : Lemma (
+    trace_digits [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] ==
+      [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] /\
+    trace_carries [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] ==
+      [0; 0; 1; 0; 0; 0; 0; 1; 1; 1; 0; 0; 0; 1; 0] /\
+    length (trace_digits [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1]) ==
+      length [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] /\
+    nth (trace_carries [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1])
+      (length [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1]) == Some 0 /\
+    trace_sum_at [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] 0 == 7) =
+  assert (trace_digits [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] ==
+    [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]);
+  assert (trace_carries [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] ==
+    [0; 0; 1; 0; 0; 0; 0; 1; 1; 1; 0; 0; 0; 1; 0]);
+  assert (trace_sum_at [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] 0 == 7);
+  ()
+
+let local_profile_witness_84724043932847 () : Lemma (
+    trace_local_profile_complement_witness
+      [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]) =
+  assert (canonical #10 [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1]);
+  assert ([6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1] <> []);
+  trace_profile_17602285712176 ();
+  reverse_add_17602285712176_to_84724043932847 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
