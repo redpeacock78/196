@@ -129,6 +129,41 @@ let trace_no_overflow_palindrome_implies_sum_low
         with (
           trace_palindrome_obstruction_at_excludes_palindrome xs j))))
 
+// Conversely, if every mirrored input-digit sum stays below the base, no
+// carry enters any cell and the output digits are mirrored.
+let trace_no_overflow_low_sums_imply_digit_symmetry
+  (xs:numeral 10) : Lemma (requires (
+      xs <> [] /\
+      length (trace_digits xs) == length xs /\
+      nth (trace_carries xs) (length xs) == Some 0 /\
+      (forall j. j < length xs ==> trace_sum_at xs j < 10)))
+    (ensures (forall i. i < length xs ==>
+      trace_digit_at xs i ==
+        trace_digit_at xs (length xs - 1 - i))) =
+  introduce forall (i:nat). i < length xs ==>
+    trace_digit_at xs i == trace_digit_at xs (length xs - 1 - i)
+  with (
+    introduce (i < length xs) ==> _
+    with (
+      let mirror : nat = length xs - 1 - i in
+      assert (mirror < length xs);
+      trace_carry_prefix_zero xs i;
+      trace_carry_prefix_zero xs (i + 1);
+      trace_carry_prefix_zero xs mirror;
+      trace_carry_prefix_zero xs (mirror + 1);
+      trace_equation_at xs i;
+      trace_equation_at xs mirror;
+      trace_sum_symmetric_at xs i;
+      assert (trace_carry_at xs i == 0);
+      assert (trace_carry_at xs (i + 1) == 0);
+      assert (trace_carry_at xs mirror == 0);
+      assert (trace_carry_at xs (mirror + 1) == 0);
+      assert (trace_digit_at xs i == trace_sum_at xs i);
+      assert (trace_digit_at xs mirror == trace_sum_at xs mirror);
+      assert (trace_digit_at xs i == trace_digit_at xs mirror);
+      ()));
+  ()
+
 let high_sum_witness_1675 () : Lemma (
     trace_palindrome_obstruction_at [5; 7; 6; 1] 0) =
   assert (length (trace_digits [5; 7; 6; 1]) ==

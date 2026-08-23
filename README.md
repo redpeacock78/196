@@ -27,7 +27,7 @@ Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。
 `trace_palindrome_obstruction` は通常の carry obstruction と overflow の和・carry obstruction を統合し、どちらからでも回文 output を排除できる soundness を持ちます。
 `ReverseAddCarrySummary.fst` は、任意長の桁和列を2値carry関数の合成へ要約し、合成の単位元・結合則と `add_trace` の最終carryとの一致を検証します。これは桁数に依存しないcarry abstractionの基礎ですが、carry profile全体の対称性まではまだ要約していません。
-`ReverseAddHighSum.fst` は、桁あふれなしで先行する桁和がすべて10未満なら、最初の高い桁和から carry mismatch を index 付きで導きます。さらに no-overflow の回文 output なら全桁和が10未満である必要条件を検証します。`1675` への適用まで検証していますが、全 carry profile の対称性はまだ証明していません。
+`ReverseAddHighSum.fst` は、桁あふれなしで先行する桁和がすべて10未満なら、最初の高い桁和から carry mismatch を index 付きで導きます。さらに no-overflow の回文 output なら全桁和が10未満である必要条件と、全桁和が10未満なら output 桁が対称になる十分条件を検証します。`1675` への適用まで検証していますが、全 carry profile の対称性はまだ証明していません。
 `ReverseAddWitness.fst` は、この obstruction を carry mismatch index または overflow relation mismatch index の具体 witness として扱う soundness 層です。将来の保存性証明が index を追跡できるようにします。
 同ファイルの `trace_overflow_sum_jump_obstruction_at` は、隣接する桁和の差が carry 補正幅11を超えると overflow relation obstruction になる一般補題です。回文 output ではこの jump がなく、端点和は `1` または `11` に限られることも検証します。端点和がそれ以外なら index 0 の low-one obstruction へ接続します。
 `trace_palindrome_candidate` は、回文 output が必ず入る no-overflow（全桁和が10未満）または overflow（端点和が11で隣接桁和の12以上の jump がない）の粗い必要条件 profile です。`trace_palindrome_implies_candidate` でこの分類を検証し、196-specific invariant の目標へ接続しています。
