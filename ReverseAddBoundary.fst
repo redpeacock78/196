@@ -380,6 +380,34 @@ let local_profile_witness_16403234045 () : Lemma (
   overflow_internal_cell_implies_next_witness source;
   ()
 
+let trace_profile_16403234045 () : Lemma (
+    trace_digits [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] ==
+      [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7] /\
+    trace_carries [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] ==
+      [0; 0; 1; 0; 0; 0; 0; 0; 0; 0; 1; 0] /\
+    length (trace_digits [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1]) ==
+      length [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] /\
+    nth (trace_carries [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1])
+      (length [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1]) == Some 0 /\
+    trace_sum_at [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] 0 == 6) =
+  assert (trace_digits [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] ==
+    [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7]);
+  assert (trace_carries [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] ==
+    [0; 0; 1; 0; 0; 0; 0; 0; 0; 0; 1; 0]);
+  assert (trace_sum_at [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] 0 == 6);
+  ()
+
+let local_profile_witness_70446464506 () : Lemma (
+    trace_local_profile_complement_witness
+      [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7]) =
+  assert (canonical #10 [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1]);
+  assert ([5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1] <> []);
+  trace_profile_16403234045 ();
+  reverse_add_16403234045_to_70446464506 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
