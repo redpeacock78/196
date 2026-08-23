@@ -1509,6 +1509,32 @@ let not_candidate_94039 () : Lemma (
   trace_overflow_outer_sum_not_candidate digits_94039;
   ()
 
+// The generalized low-outer-sum rule applies to the concrete 196 boundary
+// 13783 -> 52514 at its central cell.
+let local_profile_witness_52514 () : Lemma (
+    trace_local_profile_complement_witness digits_52514) =
+  assert (digits_13783 == [3; 8; 7; 3; 1]);
+  assert (digits_52514 == [4; 1; 5; 2; 5]);
+  assert (canonical digits_13783);
+  assert (digits_13783 <> []);
+  assert (length (trace_digits digits_13783) == length digits_13783);
+  assert (nth (trace_carries digits_13783) (length digits_13783) == Some 0);
+  assert (trace_sum_at digits_13783 0 == 4);
+  assert (trace_sum_at digits_13783 2 == 14);
+  assert (trace_carry_at digits_13783 2 == 1);
+  assert (trace_carry_at digits_13783 3 == 1);
+  exists_intro
+    (fun (i:nat) -> i < length digits_13783 /\
+      2 * trace_sum_at digits_13783 i +
+          trace_carry_at digits_13783 i +
+          trace_carry_at digits_13783 (length digits_13783 - 1 - i) >=
+        10 + 10 * (trace_carry_at digits_13783 (i + 1) +
+          trace_carry_at digits_13783 (length digits_13783 - i)))
+    2;
+  transition_13783_to_52514 ();
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness digits_13783;
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
