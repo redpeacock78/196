@@ -708,6 +708,9 @@ let digits_84724043932847 : numeral 10 = [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4;
 let digits_159547977975595 : numeral 10 = [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]
 let digits_755127757721546 : numeral 10 = [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7]
 let digits_1400255515443103 : numeral 10 = [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1]
+let digits_4413700670963144 : numeral 10 = [4; 4; 1; 3; 6; 9; 0; 7; 6; 0; 0; 7; 3; 1; 4; 4]
+let digits_8827391431036288 : numeral 10 = [8; 8; 2; 6; 3; 0; 1; 3; 4; 1; 9; 3; 7; 2; 8; 8]
+let digits_17653692772973576 : numeral 10 = [6; 7; 5; 3; 7; 9; 2; 7; 7; 2; 9; 6; 3; 5; 6; 7; 1]
 
 let value_digits_7436 () : Lemma (value digits_7436 == 7436) = ()
 
@@ -915,6 +918,27 @@ let reaches_196_1400255515443103 () : Lemma (
   reaches_196_755127757721546 ();
   iterate_succ #10 29 digits_196;
   reverse_add_755127757721546_to_1400255515443103 ();
+  ()
+
+let reaches_196_4413700670963144 () : Lemma (
+    iterate 31 digits_196 == digits_4413700670963144) =
+  reaches_196_1400255515443103 ();
+  iterate_succ #10 30 digits_196;
+  reverse_add_1400255515443103_to_4413700670963144 ();
+  ()
+
+let reaches_196_8827391431036288 () : Lemma (
+    iterate 32 digits_196 == digits_8827391431036288) =
+  reaches_196_4413700670963144 ();
+  iterate_succ #10 31 digits_196;
+  reverse_add_4413700670963144_to_8827391431036288 ();
+  ()
+
+let reaches_196_17653692772973576 () : Lemma (
+    iterate 33 digits_196 == digits_17653692772973576) =
+  reaches_196_8827391431036288 ();
+  iterate_succ #10 32 digits_196;
+  reverse_add_8827391431036288_to_17653692772973576 ();
   ()
 
 let finite_196_indexed_witnesses () : Lemma (
@@ -1800,6 +1824,13 @@ let local_profile_witness_8827391431036288 () : Lemma (
     trace_local_profile_complement_witness
       [8; 8; 2; 6; 3; 0; 1; 3; 4; 1; 9; 3; 7; 2; 8; 8]) =
   ReverseAddBoundary.local_profile_witness_8827391431036288 ();
+  ()
+
+// The overflow internal-cell rule discharges 8827391431036288 -> 17653692772973576.
+let local_profile_witness_17653692772973576 () : Lemma (
+    trace_local_profile_complement_witness
+      [6; 7; 5; 3; 7; 9; 2; 7; 7; 2; 9; 6; 3; 5; 6; 7; 1]) =
+  ReverseAddBoundary.local_profile_witness_17653692772973576 ();
   ()
 
 let finite_196_candidate_prefix () : Lemma (
