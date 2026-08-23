@@ -2,7 +2,9 @@ module ReverseAddOverflowProfile
 
 open ReverseAdd
 open ReverseAddCarry
+open ReverseAddWitness
 open ReverseAddHighSum
+open FStar.Classical
 open FStar.List.Tot
 
 // Conversely, the overflow sum/carry relation reconstructs mirrored output
@@ -79,6 +81,139 @@ let trace_local_palindrome_profile (xs:numeral 10) : prop =
        trace_sum_at xs (length xs - i) +
          overflow_trace_carry_at xs (length xs - i) +
          10 * overflow_trace_carry_at xs (i + 1)))
+
+let trace_local_profile_relation (xs:numeral 10) (i:nat) : prop =
+  if i <= length xs then
+    trace_sum_at xs i + overflow_trace_carry_at xs i +
+        10 * overflow_trace_carry_at xs (length xs - i + 1) ==
+      trace_sum_at xs (length xs - i) +
+        overflow_trace_carry_at xs (length xs - i) +
+        10 * overflow_trace_carry_at xs (i + 1)
+  else
+    False
+
+// The complement has a concrete witness in either output-length branch.
+let trace_local_profile_complement_witness (xs:numeral 10) : prop =
+  (length (trace_digits xs) == length xs /\
+   nth (trace_carries xs) (length xs) == Some 0 /\
+   exists (i:nat). i < length xs /\ trace_sum_at xs i >= 10) \/
+  (length (trace_digits xs) == length xs + 1 /\
+   nth (trace_carries xs) (length xs) == Some 1 /\
+   exists (i:nat). i <= length xs /\
+     ~(trace_local_profile_relation xs i))
+
+let trace_not_local_profile_implies_witness (xs:numeral 10)
+  : Lemma (requires (xs <> [] /\
+      ~(trace_local_palindrome_profile xs)))
+    (ensures (trace_local_profile_complement_witness xs)) =
+  reverse_trace_output_length_case xs;
+  rev_length xs;
+  trace_output_length_carry_link xs (rev xs) 0;
+  eliminate
+    (length (trace_digits xs) == length xs /\
+     nth (trace_carries xs) (length xs) == Some 0) \/
+    (length (trace_digits xs) == length xs + 1 /\
+     nth (trace_carries xs) (length xs) == Some 1)
+  with (
+    assert (~ (forall (i:nat). i < length xs ==>
+      trace_sum_at xs i < 10));
+    assert (~ (forall (i:nat). ~(
+      i < length xs /\ trace_sum_at xs i >= 10)));
+    not_forall_implies_exists #nat
+      #(fun (i:nat) -> i < length xs /\ trace_sum_at xs i >= 10)
+      ();
+    eliminate exists (i:nat).
+      i < length xs /\ trace_sum_at xs i >= 10
+    with (
+      exists_intro
+        (fun (i:nat) -> i < length xs /\ trace_sum_at xs i >= 10) i;
+      ()))
+  and (
+    assert (~ (forall (i:nat). i <= length xs ==>
+      trace_local_profile_relation xs i));
+    assert (~ (forall (i:nat). ~(
+      i <= length xs /\ ~(trace_local_profile_relation xs i))));
+    not_forall_implies_exists #nat
+      #(fun (i:nat) -> i <= length xs /\
+        ~(trace_local_profile_relation xs i))
+      ();
+    eliminate exists (i:nat).
+      i <= length xs /\ ~(trace_local_profile_relation xs i)
+    with (
+      exists_intro
+        (fun (i:nat) -> i <= length xs /\
+          ~(trace_local_profile_relation xs i)) i;
+      ()))
+
+let no_overflow_profile_witness_implies_not
+  (xs:numeral 10) (i:nat)
+  : Lemma (requires (
+      length (trace_digits xs) == length xs /\
+      nth (trace_carries xs) (length xs) == Some 0 /\
+      i < length xs /\ trace_sum_at xs i >= 10))
+    (ensures (~(trace_local_palindrome_profile xs))) =
+  introduce (trace_local_palindrome_profile xs) ==> False
+  with (
+    eliminate
+      (length (trace_digits xs) == length xs /\
+       nth (trace_carries xs) (length xs) == Some 0 /\
+       (forall j. j < length xs ==> trace_sum_at xs j < 10)) \/
+      (length (trace_digits xs) == length xs + 1 /\
+       nth (trace_carries xs) (length xs) == Some 1 /\
+       (forall j. j <= length xs ==>
+         trace_local_profile_relation xs j))
+    with (
+      assert (trace_sum_at xs i < 10);
+      assert False)
+    and (
+      assert False))
+
+let overflow_profile_witness_implies_not
+  (xs:numeral 10) (i:nat)
+  : Lemma (requires (
+      length (trace_digits xs) == length xs + 1 /\
+      nth (trace_carries xs) (length xs) == Some 1 /\
+      i <= length xs /\ ~(trace_local_profile_relation xs i)))
+    (ensures (~(trace_local_palindrome_profile xs))) =
+  introduce (trace_local_palindrome_profile xs) ==> False
+  with (
+    eliminate
+      (length (trace_digits xs) == length xs /\
+       nth (trace_carries xs) (length xs) == Some 0 /\
+       (forall j. j < length xs ==> trace_sum_at xs j < 10)) \/
+      (length (trace_digits xs) == length xs + 1 /\
+       nth (trace_carries xs) (length xs) == Some 1 /\
+       (forall j. j <= length xs ==>
+         trace_local_profile_relation xs j))
+    with (
+      assert False)
+    and (
+      assert (trace_local_profile_relation xs i);
+      assert False))
+
+let local_profile_witness_implies_not_local_profile
+  (xs:numeral 10)
+  : Lemma (requires (xs <> [] /\
+      trace_local_profile_complement_witness xs))
+    (ensures (~(trace_local_palindrome_profile xs))) =
+  eliminate
+    (length (trace_digits xs) == length xs /\
+     nth (trace_carries xs) (length xs) == Some 0 /\
+     exists (i:nat). i < length xs /\ trace_sum_at xs i >= 10) \/
+    (length (trace_digits xs) == length xs + 1 /\
+     nth (trace_carries xs) (length xs) == Some 1 /\
+     exists (i:nat). i <= length xs /\
+       ~(trace_local_profile_relation xs i))
+  with (
+    eliminate exists (i:nat).
+      i < length xs /\ trace_sum_at xs i >= 10
+    with (
+      no_overflow_profile_witness_implies_not xs i))
+  and (
+    eliminate exists (i:nat).
+      i <= length xs /\ ~(trace_local_profile_relation xs i)
+    with (
+      overflow_profile_witness_implies_not xs i))
 
 let local_profile_196_is_false () : Lemma (
     ~(trace_local_palindrome_profile digits_196)) =

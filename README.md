@@ -23,6 +23,7 @@ Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little
 さらに `add_trace` の任意長 trace をこの境界へ接続し、桁あふれなしの回文 output なら carry-in prefix が対称になることを検証しています。
 この一般補題を使って `196` の一段目も排除しています。
 `ReverseAddOverflowProfile.fst` は overflow の sum/carry relation を局所桁方程式へ逆向きに接続し、その relation から output 桁の pointwise 対称性を再構成します。`trace_local_palindrome_profile` は no-overflow の低桁和条件と overflow の relation 条件を一つにまとめ、回文からこの profile が必要になること、profile から output 桁対称性が得られること、profile の補集合が一段先の回文を排除することを検証します。overflow 側でも、回文必要条件を桁対称性へ戻す sound な接続を分離しています。
+`trace_local_profile_complement_witness` はこの profile の補集合を、no-overflow の高い桁和または overflow relation の不成立という index付き witness へ分解します。`trace_not_local_profile_implies_witness` と `local_profile_witness_implies_not_local_profile` がこの分解の両方向を検証します。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。
@@ -40,6 +41,7 @@ overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条�
 `finite_196_candidate_witness_prefix` は既存の 196 の iterate 0..6 の有限証拠をこの witness 型へ変換します。
 `candidate_witness_196` は 196 の初期値からこの witness を直接構成し、`conditional_196_no_palindrome` は任意の一段保存証明を受け取って全反復の回文排除へ接続します。残る obligation はこの引数だけです。
 `conditional_196_local_profile_no_palindrome` は、`trace_local_palindrome_profile` の補集合が一段保存されるという仮定を、196 の全反復における回文排除へ直接接続します。残る 196-specific obligation はこの local profile の一段 closure です。
+`conditional_196_local_profile_witness_no_palindrome` は同じ接続を index付き witness の一段保存仮定へ狭めます。残る 196-specific obligation は、各 witness を一段先の witnessへ運ぶ補題です。
 `all_iterate_not_candidate_excludes_palindrome` は、196 軌道の各段が candidate profile の補集合にあるという不変量から、全反復の回文到達不能性へ接続します。残る 196-specific obligation はこの補集合の全段保存です。
 `all_iterate_not_candidate_step_excludes_palindrome` は、その保存条件を一段の `preserved` lemma に分解します。196-specific 作業はこの一段 closure の実体化です。
 `trace_candidate_not_preserved_19` は `19 -> 110` で candidate 補集合自体も保存されないことを固定します。したがって、196 では追加の状態条件を含む closure が必要です。
