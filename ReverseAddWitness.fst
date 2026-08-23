@@ -492,6 +492,10 @@ let trace_palindrome_obstruction_at_1794102596 () : Lemma (
 
 let trace_palindrome_obstruction_at_8746117567 () : Lemma (
     trace_palindrome_obstruction_at [7; 6; 5; 7; 1; 1; 6; 4; 7; 8] 0) =
+  assert (trace_digits [7; 6; 5; 7; 1; 1; 6; 4; 7; 8] ==
+    [5; 4; 0; 4; 3; 2; 3; 0; 4; 6; 1]);
+  assert (trace_carries [7; 6; 5; 7; 1; 1; 6; 4; 7; 8] ==
+    [0; 1; 1; 1; 1; 0; 0; 1; 1; 1; 1]);
   assert (length (trace_digits [7; 6; 5; 7; 1; 1; 6; 4; 7; 8]) ==
     length [7; 6; 5; 7; 1; 1; 6; 4; 7; 8] + 1);
   assert (nth (trace_carries [7; 6; 5; 7; 1; 1; 6; 4; 7; 8])
@@ -832,6 +836,14 @@ let reverse_add_755127757721546_to_1400255515443103 () : Lemma (
   assert (trace_digits [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7] ==
     [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1]);
   trace_digits_equals_reverse_add [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7];
+  ()
+
+let reverse_add_1400255515443103_to_4413700670963144 () : Lemma (
+    reverse_add #10 [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1] ==
+      [4; 4; 1; 3; 6; 9; 0; 7; 6; 0; 0; 7; 3; 1; 4; 4]) =
+  assert (trace_digits [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1] ==
+    [4; 4; 1; 3; 6; 9; 0; 7; 6; 0; 0; 7; 3; 1; 4; 4]);
+  trace_digits_equals_reverse_add [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1];
   ()
 
 let trace_profile_facts_10755470 () : Lemma (
