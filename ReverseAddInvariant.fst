@@ -1788,3 +1788,24 @@ let finite_196_candidate_witness_prefix () : Lemma (
   iterate_nonempty #10 6 digits_196;
   trace_not_candidate_implies_witness (iterate 6 digits_196);
   trace_candidate_witness_implies_not_candidate (iterate 6 digits_196)
+
+// The 196-specific endgame starts from one concrete witness.  The only
+// remaining obligation is the genuinely infinite one-step preservation
+// proof supplied by the caller below.
+let candidate_witness_196 () : Lemma (
+    trace_candidate_complement_witness digits_196) =
+  digits_196_canonical_nonempty ();
+  not_candidate_196 ();
+  trace_not_candidate_implies_witness digits_196;
+  ()
+
+let conditional_196_no_palindrome
+  (preserved:(y:numeral 10 -> Lemma (
+      requires (trace_candidate_complement_witness y))
+      (ensures (trace_candidate_complement_witness (reverse_add y)))))
+  : Lemma (ensures (forall (k:nat).
+      ~ (palindrome #10 (iterate (k + 1) digits_196)))) =
+  digits_196_canonical_nonempty ();
+  candidate_witness_196 ();
+  all_iterate_candidate_witness_step_excludes_palindrome
+    digits_196 preserved

@@ -37,6 +37,7 @@ overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条�
 `trace_candidate_witness_implies_not_candidate` も検証し、4 branch-local witness から candidate 補集合へ戻せることを固定します。
 `all_iterate_candidate_witness_from_step` と `all_iterate_candidate_witness_step_excludes_palindrome` は、一段の candidate witness 保存補題を全 iterate の回文排除へ持ち上げる接続部です。保存補題そのものはまだ 196 固有に実体化していません。
 `finite_196_candidate_witness_prefix` は既存の 196 の iterate 0..6 の有限証拠をこの witness 型へ変換します。
+`candidate_witness_196` は 196 の初期値からこの witness を直接構成し、`conditional_196_no_palindrome` は任意の一段保存証明を受け取って全反復の回文排除へ接続します。残る obligation はこの引数だけです。
 `all_iterate_not_candidate_excludes_palindrome` は、196 軌道の各段が candidate profile の補集合にあるという不変量から、全反復の回文到達不能性へ接続します。残る 196-specific obligation はこの補集合の全段保存です。
 `all_iterate_not_candidate_step_excludes_palindrome` は、その保存条件を一段の `preserved` lemma に分解します。196-specific 作業はこの一段 closure の実体化です。
 `trace_candidate_not_preserved_19` は `19 -> 110` で candidate 補集合自体も保存されないことを固定します。したがって、196 では追加の状態条件を含む closure が必要です。
