@@ -26,6 +26,7 @@ Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little
 `trace_local_profile_complement_witness` はこの profile の補集合を、no-overflow の高い桁和または overflow relation の不成立という index付き witness へ分解します。`trace_not_local_profile_implies_witness` と `local_profile_witness_implies_not_local_profile` がこの分解の両方向を検証します。
 `no_overflow_trace_outer_sum_equation` は no-overflow 段の次段外側和を現在段の外側和と境界 carry で表し、`no_overflow_outer_sum_6_to_9_implies_next_witness` は外側和 6..9 の段から次段の補集合 witness を構成します。これは 196-specific closure の一部です。
 さらに、外側和 1..4 で内部に和 15 以上がある段については、`no_overflow_outer_sum_1_to_4_high_sum_15_implies_next_witness` が同じ内部セル、または overflow 時の外側 relation mismatch を次段 witness にします。
+外側和5・末尾 carry-in 1 の残る境界は、次段の隣接和 jump が12以上なら `no_overflow_outer_sum_5_carry1_jump_implies_next_witness` で no-overflow の外側和11または overflow relation mismatch に分岐できます。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。

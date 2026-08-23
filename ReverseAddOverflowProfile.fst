@@ -488,6 +488,66 @@ let no_overflow_outer_sum_5_carry0_implies_next_witness
         ~(trace_local_profile_relation (reverse_add xs) i))
       0;
     ())
+
+// The remaining outer-sum-5 boundary is discharged when the next trace has
+// an indexed jump; its no-overflow branch already has outer sum 11.
+let no_overflow_outer_sum_5_carry1_jump_implies_next_witness
+  (xs:numeral 10)
+  : Lemma (requires (
+      canonical xs /\ xs <> [] /\
+      length (trace_digits xs) == length xs /\
+      nth (trace_carries xs) (length xs) == Some 0 /\
+      trace_sum_at xs 0 == 5 /\
+      trace_carry_at xs (length xs - 1) == 1 /\
+      exists (i:nat). 0 < i /\ i <= length (reverse_add xs) /\
+        (trace_sum_at (reverse_add xs) i >=
+           trace_sum_at (reverse_add xs) (i - 1) + 12 \/
+         trace_sum_at (reverse_add xs) (i - 1) >=
+           trace_sum_at (reverse_add xs) i + 12)))
+    (ensures (trace_local_profile_complement_witness (reverse_add xs))) =
+  trace_digits_equals_reverse_add xs;
+  add_trace_nonempty #10 xs (rev xs) 0;
+  assert (trace_digits xs <> []);
+  assert (reverse_add xs <> []);
+  let n : nat = length xs in
+  trace_carry_prefix_zero xs 0;
+  trace_equation_at xs 0;
+  assert (trace_carry_at xs 1 == 0);
+  no_overflow_trace_outer_sum_equation xs;
+  assert (trace_sum_at (reverse_add xs) 0 ==
+    trace_sum_at (trace_digits xs) 0);
+  assert (trace_sum_at (reverse_add xs) 0 == 11);
+  rev_length (reverse_add xs);
+  reverse_trace_output_length_case (reverse_add xs);
+  trace_output_length_carry_link
+    (reverse_add xs) (rev (reverse_add xs)) 0;
+  eliminate
+    (length (trace_digits (reverse_add xs)) == length (reverse_add xs) /\
+     nth (trace_carries (reverse_add xs))
+       (length (reverse_add xs)) == Some 0) \/
+    (length (trace_digits (reverse_add xs)) == length (reverse_add xs) + 1 /\
+     nth (trace_carries (reverse_add xs))
+       (length (reverse_add xs)) == Some 1)
+  with (
+    exists_intro
+      (fun (i:nat) -> i < length (reverse_add xs) /\
+        trace_sum_at (reverse_add xs) i >= 10)
+      0;
+    ())
+  and (
+    eliminate exists (i:nat).
+      0 < i /\ i <= length (reverse_add xs) /\
+      (trace_sum_at (reverse_add xs) i >=
+         trace_sum_at (reverse_add xs) (i - 1) + 12 \/
+       trace_sum_at (reverse_add xs) (i - 1) >=
+         trace_sum_at (reverse_add xs) i + 12)
+    with (
+      trace_overflow_sum_jump_obstruction_at (reverse_add xs) i;
+      exists_intro
+        (fun (k:nat) -> k <= length (reverse_add xs) /\
+          ~(trace_local_profile_relation (reverse_add xs) k))
+        i;
+      ()))
 let local_profile_196_is_false () : Lemma (
     ~(trace_local_palindrome_profile digits_196)) =
   assert (length (trace_digits digits_196) == length digits_196);
