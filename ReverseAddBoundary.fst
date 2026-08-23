@@ -492,6 +492,14 @@ let overflow_precondition_70446464506 () : Lemma (
     3;
   ()
 
+let overflow_witness_70446464506 () : Lemma (
+    trace_local_profile_complement_witness
+      (reverse_add [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7])) =
+  overflow_precondition_70446464506 ();
+  overflow_internal_cell_implies_next_witness
+    [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7];
+  ()
+
 let local_profile_witness_130992928913 () : Lemma (
     trace_local_profile_complement_witness
       [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1]) =
@@ -499,10 +507,8 @@ let local_profile_witness_130992928913 () : Lemma (
   assert (source == [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7]);
   assert (canonical #10 source);
   assert (source <> []);
-  overflow_precondition_70446464506 ();
   reverse_add_70446464506_to_130992928913 ();
-  overflow_internal_cell_implies_next_witness
-    [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7];
+  overflow_witness_70446464506 ();
   ()
 
 let trace_profile_130992928913 () : Lemma (

@@ -18,7 +18,7 @@ let rec iterate_succ (#b:base) (k:nat) (x:numeral b)
   if k = 0 then
     ()
   else
-    let k' : nat = k - 1 in
+    let k' : nat = if k > 0 then k - 1 else 0 in
     iterate_succ k' (reverse_add x);
     ()
 
@@ -2135,6 +2135,31 @@ let rec iterate_local_profile_witness_from_step
     preserved (iterate k' xs);
     ()
 
+// Replace the opaque one-step preservation argument with the explicit
+// branch coverage needed by the local witness rules.
+let rec iterate_local_profile_witness_from_cases
+  (xs:numeral 10)
+  (coverage:(forall (j:nat).
+    trace_local_profile_witness_step_case (iterate j xs)))
+  (steps:nat)
+  : Lemma (requires (canonical xs /\ xs <> [] /\
+      trace_local_profile_complement_witness xs))
+    (ensures (trace_local_profile_complement_witness (iterate steps xs)))
+    (decreases steps) =
+  if steps = 0 then
+    ()
+  else if steps > 0 then begin
+    let previous : nat = steps - 1 in
+    iterate_local_profile_witness_from_cases xs coverage previous;
+    iterate_succ #10 previous xs;
+    iterate_canonical #10 previous xs;
+    iterate_nonempty #10 previous xs;
+    assert (trace_local_profile_witness_step_case (iterate previous xs));
+    local_profile_witness_step (iterate previous xs);
+    ()
+  end else
+    ()
+
 let conditional_196_local_profile_no_palindrome
   (preserved:(y:numeral 10 -> Lemma (
       requires (~(trace_local_palindrome_profile y)))
@@ -2170,6 +2195,28 @@ let conditional_196_local_profile_witness_no_palindrome
     introduce (palindrome #10 (iterate (k + 1) digits_196)) ==> False
     with (
       iterate_local_profile_witness_from_step digits_196 preserved k;
+      iterate_canonical #10 k digits_196;
+      iterate_nonempty #10 k digits_196;
+      local_profile_witness_implies_not_local_profile
+        (iterate k digits_196);
+      iterate_succ #10 k digits_196;
+      reverse_add_local_profile_excludes_palindrome
+        (iterate k digits_196)))
+
+let conditional_196_local_profile_witness_cases_no_palindrome
+  (coverage:(forall (k:nat).
+    trace_local_profile_witness_step_case (iterate k digits_196)))
+  : Lemma (ensures (forall (k:nat).
+      ~ (palindrome #10 (iterate (k + 1) digits_196)))) =
+  digits_196_canonical_nonempty ();
+  local_profile_196_is_false ();
+  trace_not_local_profile_implies_witness digits_196;
+  introduce forall (k:nat).
+    ~ (palindrome #10 (iterate (k + 1) digits_196))
+  with (
+    introduce (palindrome #10 (iterate (k + 1) digits_196)) ==> False
+    with (
+      iterate_local_profile_witness_from_cases digits_196 coverage k;
       iterate_canonical #10 k digits_196;
       iterate_nonempty #10 k digits_196;
       local_profile_witness_implies_not_local_profile

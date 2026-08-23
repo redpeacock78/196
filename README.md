@@ -70,6 +70,8 @@ overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条�
 `candidate_witness_196` は 196 の初期値からこの witness を直接構成し、`conditional_196_no_palindrome` は任意の一段保存証明を受け取って全反復の回文排除へ接続します。残る obligation はこの引数だけです。
 `conditional_196_local_profile_no_palindrome` は、`trace_local_palindrome_profile` の補集合が一段保存されるという仮定を、196 の全反復における回文排除へ直接接続します。残る 196-specific obligation はこの local profile の一段 closure です。
 `conditional_196_local_profile_witness_no_palindrome` は同じ接続を index付き witness の一段保存仮定へ狭めます。残る 196-specific obligation は、各 witness を一段先の witnessへ運ぶ補題です。
+`trace_local_profile_witness_step_case` は、その一段保存を no-overflow 外側和6..9、低外側和の内部セル、外側和5の carry 分岐、overflow 内部セル、外側和10の no-overflow 遷移という6ケースへ分解します。`local_profile_witness_step` は既存の局所規則をこのケース契約へ束ねます。
+`conditional_196_local_profile_witness_cases_no_palindrome` は、196 の全 iterate がこのケース契約を満たす仮定だけから、全反復の回文排除へ接続します。残る obligation は `forall k. trace_local_profile_witness_step_case (iterate k digits_196)` の証明です。
 `all_iterate_not_candidate_excludes_palindrome` は、196 軌道の各段が candidate profile の補集合にあるという不変量から、全反復の回文到達不能性へ接続します。残る 196-specific obligation はこの補集合の全段保存です。
 `all_iterate_not_candidate_step_excludes_palindrome` は、その保存条件を一段の `preserved` lemma に分解します。196-specific 作業はこの一段 closure の実体化です。
 `trace_candidate_not_preserved_19` は `19 -> 110` で candidate 補集合自体も保存されないことを固定します。したがって、196 では追加の状態条件を含む closure が必要です。

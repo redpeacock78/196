@@ -776,6 +776,131 @@ let overflow_to_no_overflow_internal_cell_implies_next_witness
         trace_sum_at ys k >= 10)
       i;
     ())
+
+// These are the local cases already covered by the one-step rules above.
+// The infinite 196 proof still has to show that every iterate satisfies one.
+let trace_no_overflow_profile_witness_step_case (xs:numeral 10) : prop =
+  (length (trace_digits xs) == length xs /\
+   nth (trace_carries xs) (length xs) == Some 0 /\
+   6 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 < 10) \/
+  (length (trace_digits xs) == length xs /\
+   nth (trace_carries xs) (length xs) == Some 0 /\
+   1 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 <= 4 /\
+   exists (i:nat). i < length xs /\
+     2 * trace_sum_at xs i +
+         trace_carry_at xs i +
+         trace_carry_at xs (length xs - 1 - i) >=
+       10 + 10 * (trace_carry_at xs (i + 1) +
+         trace_carry_at xs (length xs - i))) \/
+  (length (trace_digits xs) == length xs /\
+   nth (trace_carries xs) (length xs) == Some 0 /\
+   trace_sum_at xs 0 == 5 /\
+   trace_carry_at xs (length xs - 1) == 0) \/
+  (length (trace_digits xs) == length xs /\
+   nth (trace_carries xs) (length xs) == Some 0 /\
+   trace_sum_at xs 0 == 5 /\
+   trace_carry_at xs (length xs - 1) == 1 /\
+   exists (i:nat). 0 < i /\ i <= length (reverse_add xs) /\
+     (trace_sum_at (reverse_add xs) i >=
+        trace_sum_at (reverse_add xs) (i - 1) + 12 \/
+      trace_sum_at (reverse_add xs) (i - 1) >=
+        trace_sum_at (reverse_add xs) i + 12))
+
+let trace_overflow_profile_witness_step_case (xs:numeral 10) : prop =
+  (length (trace_digits xs) == length xs + 1 /\
+   nth (trace_carries xs) (length xs) == Some 1 /\
+   1 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 <= 18 /\
+   trace_sum_at xs 0 <> 10 /\
+   exists (i:nat). 0 < i /\ i < length xs /\
+     trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+         trace_carry_at xs i +
+         trace_carry_at xs (length xs - i) >=
+       10 + 10 * (trace_carry_at xs (i + 1) +
+         trace_carry_at xs (length xs - i + 1))) \/
+  (length (trace_digits xs) == length xs + 1 /\
+   nth (trace_carries xs) (length xs) == Some 1 /\
+   trace_sum_at xs 0 == 10 /\
+   length (trace_digits (reverse_add xs)) == length (reverse_add xs) /\
+   nth (trace_carries (reverse_add xs)) (length (reverse_add xs)) == Some 0 /\
+   exists (i:nat). 0 < i /\ i < length xs /\
+     trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+         trace_carry_at xs i +
+         trace_carry_at xs (length xs - i) >=
+       10 + 10 * (trace_carry_at xs (i + 1) +
+         trace_carry_at xs (length xs - i + 1)))
+
+let trace_local_profile_witness_step_case (xs:numeral 10) : prop =
+  trace_no_overflow_profile_witness_step_case xs \/
+  trace_overflow_profile_witness_step_case xs
+
+let local_profile_witness_step (xs:numeral 10) : Lemma (
+    requires (canonical xs /\ xs <> [] /\
+      trace_local_profile_complement_witness xs /\
+      trace_local_profile_witness_step_case xs))
+    (ensures (trace_local_profile_complement_witness (reverse_add xs))) =
+  assert (trace_local_profile_witness_step_case xs);
+  if length (trace_digits xs) = length xs then begin
+    assert (nth (trace_carries xs) (length xs) == Some 0);
+    if trace_sum_at xs 0 >= 6 then begin
+      assert (trace_sum_at xs 0 < 10);
+      no_overflow_outer_sum_6_to_9_implies_next_witness xs
+    end else if trace_sum_at xs 0 <= 4 then begin
+      assert (1 <= trace_sum_at xs 0);
+      assert (exists (i:nat). i < length xs /\
+        2 * trace_sum_at xs i +
+            trace_carry_at xs i +
+            trace_carry_at xs (length xs - 1 - i) >=
+          10 + 10 * (trace_carry_at xs (i + 1) +
+            trace_carry_at xs (length xs - i)));
+      no_overflow_outer_sum_1_to_4_cell_implies_next_witness xs
+    end else begin
+      assert (trace_sum_at xs 0 == 5);
+      assert (trace_carry_at xs (length xs - 1) == 0 \/
+        trace_carry_at xs (length xs - 1) == 1);
+      eliminate trace_carry_at xs (length xs - 1) == 0 \/
+        trace_carry_at xs (length xs - 1) == 1
+      with (
+        no_overflow_outer_sum_5_carry0_implies_next_witness xs;
+        ())
+      and (
+        assert (exists (i:nat). 0 < i /\
+          i <= length (reverse_add xs) /\
+          (trace_sum_at (reverse_add xs) i >=
+             trace_sum_at (reverse_add xs) (i - 1) + 12 \/
+           trace_sum_at (reverse_add xs) (i - 1) >=
+             trace_sum_at (reverse_add xs) i + 12));
+        no_overflow_outer_sum_5_carry1_jump_implies_next_witness xs;
+        ())
+    end
+  end else begin
+    assert (length (trace_digits xs) == length xs + 1);
+    assert (nth (trace_carries xs) (length xs) == Some 1);
+    if trace_sum_at xs 0 = 10 then begin
+      assert (length (trace_digits (reverse_add xs)) ==
+        length (reverse_add xs));
+      assert (nth (trace_carries (reverse_add xs))
+        (length (reverse_add xs)) == Some 0);
+      assert (exists (i:nat). 0 < i /\ i < length xs /\
+        trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+            trace_carry_at xs i +
+            trace_carry_at xs (length xs - i) >=
+          10 + 10 * (trace_carry_at xs (i + 1) +
+            trace_carry_at xs (length xs - i + 1)));
+      overflow_to_no_overflow_internal_cell_implies_next_witness
+        xs (reverse_add xs)
+    end else begin
+      assert (1 <= trace_sum_at xs 0 /\ trace_sum_at xs 0 <= 18);
+      assert (exists (i:nat). 0 < i /\ i < length xs /\
+        trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+            trace_carry_at xs i +
+            trace_carry_at xs (length xs - i) >=
+          10 + 10 * (trace_carry_at xs (i + 1) +
+            trace_carry_at xs (length xs - i + 1)));
+      assert (trace_sum_at xs 0 <> 10);
+      overflow_internal_cell_implies_next_witness xs
+    end
+  end
+
 let local_profile_196_is_false () : Lemma (
     ~(trace_local_palindrome_profile digits_196)) =
   assert (length (trace_digits digits_196) == length digits_196);
