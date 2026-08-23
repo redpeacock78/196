@@ -479,6 +479,47 @@ let local_profile_witness_130992928913 () : Lemma (
     [6; 0; 5; 4; 6; 4; 6; 4; 4; 0; 7];
   ()
 
+let trace_profile_130992928913 () : Lemma (
+    trace_digits [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] ==
+      [4; 4; 9; 7; 2; 2; 2; 2; 8; 0; 5; 4] /\
+    trace_carries [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] ==
+      [0; 0; 0; 0; 1; 1; 1; 1; 1; 1; 1; 0; 0] /\
+    length (trace_digits [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1]) ==
+      length [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] /\
+    nth (trace_carries [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1])
+      (length [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1]) == Some 0 /\
+    trace_sum_at [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] 0 == 4 /\
+    trace_sum_at [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] 3 == 17) =
+  assert (trace_digits [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] ==
+    [4; 4; 9; 7; 2; 2; 2; 2; 8; 0; 5; 4]);
+  assert (trace_carries [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] ==
+    [0; 0; 0; 0; 1; 1; 1; 1; 1; 1; 1; 0; 0]);
+  assert (trace_sum_at [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] 0 == 4);
+  assert (trace_sum_at [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] 3 == 17);
+  ()
+
+let local_profile_witness_450822227944 () : Lemma (
+    trace_local_profile_complement_witness
+      [4; 4; 9; 7; 2; 2; 2; 2; 8; 0; 5; 4]) =
+  let source : numeral 10 = [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1] in
+  assert (source == [3; 1; 9; 8; 2; 9; 2; 9; 9; 0; 3; 1]);
+  assert (canonical #10 source);
+  assert (source <> []);
+  trace_profile_130992928913 ();
+  reverse_add_130992928913_to_450822227944 ();
+  let n : nat = length source in
+  exists_intro
+    (fun (i:nat) -> i < n /\
+      2 * trace_sum_at source i +
+          trace_carry_at source i +
+          trace_carry_at source (n - 1 - i) >=
+        10 + 10 *
+          (trace_carry_at source (i + 1) +
+           trace_carry_at source (n - i)))
+    3;
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness source;
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();

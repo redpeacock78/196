@@ -1725,6 +1725,13 @@ let local_profile_witness_130992928913 () : Lemma (
   ReverseAddBoundary.local_profile_witness_130992928913 ();
   ()
 
+// The no-overflow low-sum rule discharges 130992928913 -> 450822227944.
+let local_profile_witness_450822227944 () : Lemma (
+    trace_local_profile_complement_witness
+      [4; 4; 9; 7; 2; 2; 2; 2; 8; 0; 5; 4]) =
+  ReverseAddBoundary.local_profile_witness_450822227944 ();
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
