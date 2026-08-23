@@ -159,6 +159,47 @@ let local_profile_witness_111589511 () : Lemma (
     [5; 0; 8; 4; 4; 7; 0; 6];
   ()
 
+let trace_profile_111589511 () : Lemma (
+    trace_digits [1; 1; 5; 9; 8; 5; 1; 1; 1] ==
+      [2; 2; 6; 4; 7; 5; 7; 2; 2] /\
+    trace_carries [1; 1; 5; 9; 8; 5; 1; 1; 1] ==
+      [0; 0; 0; 0; 1; 1; 1; 0; 0; 0] /\
+    length (trace_digits [1; 1; 5; 9; 8; 5; 1; 1; 1]) ==
+      length [1; 1; 5; 9; 8; 5; 1; 1; 1] /\
+    nth (trace_carries [1; 1; 5; 9; 8; 5; 1; 1; 1])
+      (length [1; 1; 5; 9; 8; 5; 1; 1; 1]) == Some 0 /\
+    trace_sum_at [1; 1; 5; 9; 8; 5; 1; 1; 1] 0 == 2 /\
+    trace_sum_at [1; 1; 5; 9; 8; 5; 1; 1; 1] 2 == 6) =
+  assert (trace_digits [1; 1; 5; 9; 8; 5; 1; 1; 1] ==
+    [2; 2; 6; 4; 7; 5; 7; 2; 2]);
+  assert (trace_carries [1; 1; 5; 9; 8; 5; 1; 1; 1] ==
+    [0; 0; 0; 0; 1; 1; 1; 0; 0; 0]);
+  assert (trace_sum_at [1; 1; 5; 9; 8; 5; 1; 1; 1] 0 == 2);
+  assert (trace_sum_at [1; 1; 5; 9; 8; 5; 1; 1; 1] 2 == 6);
+  ()
+
+let local_profile_witness_227574622 () : Lemma (
+    trace_local_profile_complement_witness
+      [2; 2; 6; 4; 7; 5; 7; 2; 2]) =
+  assert (canonical #10 [1; 1; 5; 9; 8; 5; 1; 1; 1]);
+  assert ([1; 1; 5; 9; 8; 5; 1; 1; 1] <> []);
+  trace_profile_111589511 ();
+  reverse_add_111589511_to_227574622 ();
+  exists_intro
+    (fun (i:nat) -> i < length [1; 1; 5; 9; 8; 5; 1; 1; 1] /\
+      2 * trace_sum_at [1; 1; 5; 9; 8; 5; 1; 1; 1] i +
+          trace_carry_at [1; 1; 5; 9; 8; 5; 1; 1; 1] i +
+          trace_carry_at [1; 1; 5; 9; 8; 5; 1; 1; 1]
+            (length [1; 1; 5; 9; 8; 5; 1; 1; 1] - 1 - i) >=
+        10 + 10 *
+          (trace_carry_at [1; 1; 5; 9; 8; 5; 1; 1; 1] (i + 1) +
+           trace_carry_at [1; 1; 5; 9; 8; 5; 1; 1; 1]
+             (length [1; 1; 5; 9; 8; 5; 1; 1; 1] - i)))
+    2;
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness
+    [1; 1; 5; 9; 8; 5; 1; 1; 1];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();

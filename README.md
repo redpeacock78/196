@@ -34,6 +34,7 @@ overflow 段では、現在外側和10を除けば次段外側和1/11が不可�
 さらに `18211171 -> 35322452` も、内部セル `i=1` の pair 和 `15` と carry 条件を同じ補題へ渡しています。
 続く `35322452 -> 60744805` では、外側和 `5`・末尾 carry-in `1` と次段 `i=2` の隣接和 `15 - 0 = 15` を固定し、同じ補題で witness を保存しています。
 さらに overflow 段 `60744805 -> 111589511` では、外側和 `11` と内部セル `i=3` の `8 + 15 + 1 + 0 = 24 >= 20` を `overflow_internal_cell_implies_next_witness` へ渡しています。
+続く no-overflow 段 `111589511 -> 227574622` では、外側和 `2` と内部セル `i=2` の `2 * 6 + 0 + 1 = 13 >= 10` を `no_overflow_outer_sum_1_to_4_cell_implies_next_witness` へ渡しています。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。
