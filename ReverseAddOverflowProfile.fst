@@ -719,6 +719,63 @@ let overflow_internal_cell_implies_next_witness
           ~(trace_local_profile_relation (reverse_add xs) k))
         0;
       ()))
+
+// The outer-sum-10 exception is harmless when the next step is already
+// known to be no-overflow: the same internal pair supplies the witness.
+let overflow_to_no_overflow_internal_cell_implies_next_witness
+  (xs ys:numeral 10)
+  : Lemma (requires (
+      canonical xs /\ xs <> [] /\
+      length (trace_digits xs) == length xs + 1 /\
+      nth (trace_carries xs) (length xs) == Some 1 /\
+      reverse_add xs == ys /\
+      length (trace_digits ys) == length ys /\
+      nth (trace_carries ys) (length ys) == Some 0 /\
+      exists (i:nat). 0 < i /\ i < length xs /\
+        trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+            trace_carry_at xs i +
+            trace_carry_at xs (length xs - i) >=
+          10 + 10 * (trace_carry_at xs (i + 1) +
+            trace_carry_at xs (length xs - i + 1))))
+    (ensures (trace_local_profile_complement_witness ys)) =
+  trace_digits_equals_reverse_add xs;
+  assert (trace_digits xs == ys);
+  add_trace_nonempty #10 xs (rev xs) 0;
+  assert (trace_digits xs <> []);
+  assert (ys <> []);
+  let n : nat = length xs in
+  eliminate exists (i:nat).
+    0 < i /\ i < length xs /\
+    trace_sum_at xs i + trace_sum_at xs (length xs - i) +
+        trace_carry_at xs i +
+        trace_carry_at xs (length xs - i) >=
+      10 + 10 * (trace_carry_at xs (i + 1) +
+        trace_carry_at xs (length xs - i + 1))
+  with (
+    let j : nat = n - i in
+    assert (j < n);
+    assert (j + 1 == n - i + 1);
+    trace_equation_at xs i;
+    trace_equation_at xs j;
+    rev_length ys;
+    assert (i < length ys);
+    nth_rev ys i;
+    assert (trace_digit_at xs i == digit_at ys i);
+    assert (trace_digit_at xs j ==
+      digit_at ys j);
+    assert (trace_digit_at xs i + trace_digit_at xs j +
+      10 * (trace_carry_at xs (i + 1) +
+        trace_carry_at xs (j + 1)) ==
+      trace_sum_at xs i + trace_sum_at xs j +
+        trace_carry_at xs i + trace_carry_at xs j);
+    assert (trace_digit_at xs i + trace_digit_at xs j >= 10);
+    assert (trace_sum_at ys i ==
+      trace_digit_at xs i + trace_digit_at xs j);
+    exists_intro
+      (fun (k:nat) -> k < length ys /\
+        trace_sum_at ys k >= 10)
+      i;
+    ())
 let local_profile_196_is_false () : Lemma (
     ~(trace_local_palindrome_profile digits_196)) =
   assert (length (trace_digits digits_196) == length digits_196);

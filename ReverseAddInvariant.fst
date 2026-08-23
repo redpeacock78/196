@@ -1563,6 +1563,48 @@ let local_profile_witness_1675 () : Lemma (
   overflow_internal_cell_implies_next_witness digits_887;
   ()
 
+// The outer-sum-10 exception is covered by the known no-overflow branch at
+// the concrete 1067869 -> 10755470 boundary.
+let local_profile_witness_10755470 () : Lemma (
+    trace_local_profile_complement_witness
+      [0; 7; 4; 5; 5; 7; 0; 1]) =
+  assert (canonical #10 [9; 6; 8; 7; 6; 0; 1]);
+  trace_palindrome_obstruction_at_1067869 ();
+  assert (length (trace_digits [9; 6; 8; 7; 6; 0; 1]) ==
+    length [9; 6; 8; 7; 6; 0; 1] + 1);
+  assert (nth (trace_carries [9; 6; 8; 7; 6; 0; 1])
+    (length [9; 6; 8; 7; 6; 0; 1]) == Some 1);
+  assert (trace_sum_at [9; 6; 8; 7; 6; 0; 1] 0 == 10);
+  assert (trace_sum_at [9; 6; 8; 7; 6; 0; 1] 2 == 14);
+  assert (trace_sum_at [9; 6; 8; 7; 6; 0; 1] 5 == 6);
+  assert (trace_carry_at [9; 6; 8; 7; 6; 0; 1] 2 == 0);
+  assert (trace_carry_at [9; 6; 8; 7; 6; 0; 1] 3 == 1);
+  assert (trace_carry_at [9; 6; 8; 7; 6; 0; 1] 5 == 1);
+  assert (trace_carry_at [9; 6; 8; 7; 6; 0; 1] 6 == 0);
+  reverse_add_1067869_to_10755470 ();
+  trace_no_overflow_10755470 ();
+  assert (length (trace_digits [0; 7; 4; 5; 5; 7; 0; 1]) ==
+    length [0; 7; 4; 5; 5; 7; 0; 1]);
+  assert (nth (trace_carries [0; 7; 4; 5; 5; 7; 0; 1])
+    (length [0; 7; 4; 5; 5; 7; 0; 1]) == Some 0);
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < length [9; 6; 8; 7; 6; 0; 1] /\
+      trace_sum_at [9; 6; 8; 7; 6; 0; 1] i +
+          trace_sum_at [9; 6; 8; 7; 6; 0; 1]
+            (length [9; 6; 8; 7; 6; 0; 1] - i) +
+          trace_carry_at [9; 6; 8; 7; 6; 0; 1] i +
+          trace_carry_at [9; 6; 8; 7; 6; 0; 1]
+            (length [9; 6; 8; 7; 6; 0; 1] - i) >=
+        10 + 10 *
+          (trace_carry_at [9; 6; 8; 7; 6; 0; 1] (i + 1) +
+           trace_carry_at [9; 6; 8; 7; 6; 0; 1]
+             (length [9; 6; 8; 7; 6; 0; 1] - i + 1)))
+    2;
+  overflow_to_no_overflow_internal_cell_implies_next_witness
+    [9; 6; 8; 7; 6; 0; 1]
+    [0; 7; 4; 5; 5; 7; 0; 1];
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\

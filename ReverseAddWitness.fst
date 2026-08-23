@@ -388,6 +388,17 @@ let trace_palindrome_obstruction_at_10755470 () : Lemma (
     trace_carry_at [0; 7; 4; 5; 5; 7; 0; 1] 6));
   ()
 
+let trace_no_overflow_10755470 () : Lemma (
+    length (trace_digits [0; 7; 4; 5; 5; 7; 0; 1]) ==
+      length [0; 7; 4; 5; 5; 7; 0; 1] /\
+    nth (trace_carries [0; 7; 4; 5; 5; 7; 0; 1])
+      (length [0; 7; 4; 5; 5; 7; 0; 1]) == Some 0) =
+  assert (length (trace_digits [0; 7; 4; 5; 5; 7; 0; 1]) ==
+    length [0; 7; 4; 5; 5; 7; 0; 1]);
+  assert (nth (trace_carries [0; 7; 4; 5; 5; 7; 0; 1])
+    (length [0; 7; 4; 5; 5; 7; 0; 1]) == Some 0);
+  ()
+
 let trace_palindrome_obstruction_at_18211171 () : Lemma (
     trace_palindrome_obstruction_at [1; 7; 1; 1; 1; 2; 8; 1] 0) =
   assert (length (trace_digits [1; 7; 1; 1; 1; 2; 8; 1]) ==
