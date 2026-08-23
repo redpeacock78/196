@@ -833,3 +833,31 @@ let reverse_add_755127757721546_to_1400255515443103 () : Lemma (
     [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 0; 0; 4; 1]);
   trace_digits_equals_reverse_add [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7];
   ()
+
+let trace_profile_facts_10755470 () : Lemma (
+    trace_digits [0; 7; 4; 5; 5; 7; 0; 1] ==
+      [1; 7; 1; 1; 1; 2; 8; 1] /\
+    trace_carries [0; 7; 4; 5; 5; 7; 0; 1] ==
+      [0; 0; 0; 1; 1; 1; 1; 0; 0] /\
+    trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 0 == 1 /\
+    trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 1 == 7 /\
+    trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 2 == 11 /\
+    trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 5 == 11) =
+  assert (trace_digits [0; 7; 4; 5; 5; 7; 0; 1] ==
+    [1; 7; 1; 1; 1; 2; 8; 1]);
+  assert (trace_carries [0; 7; 4; 5; 5; 7; 0; 1] ==
+    [0; 0; 0; 1; 1; 1; 1; 0; 0]);
+  assert (trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 0 == 1);
+  assert (trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 1 == 7);
+  assert (trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 2 == 11);
+  assert (trace_sum_at [0; 7; 4; 5; 5; 7; 0; 1] 5 == 11);
+  ()
+
+let trace_profile_shape_10755470 () : Lemma (
+    canonical #10 [0; 7; 4; 5; 5; 7; 0; 1] /\
+    [0; 7; 4; 5; 5; 7; 0; 1] <> [] /\
+    length [0; 7; 4; 5; 5; 7; 0; 1] == 8) =
+  assert (canonical #10 [0; 7; 4; 5; 5; 7; 0; 1]);
+  assert ([0; 7; 4; 5; 5; 7; 0; 1] <> []);
+  assert (length [0; 7; 4; 5; 5; 7; 0; 1] == 8);
+  ()
