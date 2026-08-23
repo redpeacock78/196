@@ -3,6 +3,7 @@ module ReverseAddInvariant
 open ReverseAdd
 open ReverseAddCarry
 open ReverseAddWitness
+open ReverseAddBoundary
 open ReverseAddHighSum
 open ReverseAddOverflowProfile
 open ReverseAddFixedWidth
@@ -1651,6 +1652,14 @@ let local_profile_witness_35322452 () : Lemma (
     1;
   no_overflow_outer_sum_1_to_4_cell_implies_next_witness
     [1; 7; 1; 1; 1; 2; 8; 1];
+  ()
+
+// The outer-sum-5 carry-1 jump rule discharges the next boundary at
+// 35322452 -> 60744805 using the i=2 jump in the next trace.
+let local_profile_witness_60744805 () : Lemma (
+    trace_local_profile_complement_witness
+      [5; 0; 8; 4; 4; 7; 0; 6]) =
+  ReverseAddBoundary.local_profile_witness_60744805 ();
   ()
 
 let finite_196_candidate_prefix () : Lemma (

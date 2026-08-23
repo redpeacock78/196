@@ -5,6 +5,8 @@ module ReverseAddBoundary
 open ReverseAdd
 open ReverseAddCarry
 open ReverseAddWitness
+open ReverseAddOverflowProfile
+open FStar.Classical
 open FStar.List.Tot
 
 let trace_profile_60744805 () : Lemma (
@@ -22,6 +24,87 @@ let trace_profile_60744805 () : Lemma (
     [1; 1; 5; 9; 8; 5; 1; 1; 1]);
   assert (trace_carries [5; 0; 8; 4; 4; 7; 0; 6] ==
     [0; 1; 0; 1; 0; 0; 1; 0; 1]);
+  ()
+
+let trace_no_overflow_35322452 () : Lemma (
+    length (trace_digits [2; 5; 4; 2; 2; 3; 5; 3]) ==
+      length [2; 5; 4; 2; 2; 3; 5; 3] /\
+    nth (trace_carries [2; 5; 4; 2; 2; 3; 5; 3])
+      (length [2; 5; 4; 2; 2; 3; 5; 3]) == Some 0 /\
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 1 /\
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3]
+      (length [2; 5; 4; 2; 2; 3; 5; 3] - 1) == 1) =
+  assert (length (trace_digits [2; 5; 4; 2; 2; 3; 5; 3]) ==
+    length [2; 5; 4; 2; 2; 3; 5; 3]);
+  assert (nth (trace_carries [2; 5; 4; 2; 2; 3; 5; 3])
+    (length [2; 5; 4; 2; 2; 3; 5; 3]) == Some 0);
+  assert (trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 0 == 0);
+  assert (~ (trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 0 ==
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7));
+  assert (trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 0 \/
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 1);
+  eliminate
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 0 \/
+      trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 1
+  with (
+    assert False)
+  and (
+    assert (trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3] 7 == 1));
+  assert (length [2; 5; 4; 2; 2; 3; 5; 3] == 8);
+  assert (length [2; 5; 4; 2; 2; 3; 5; 3] - 1 == 7);
+  assert (trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3]
+    (length [2; 5; 4; 2; 2; 3; 5; 3] - 1) == 1);
+  ()
+
+let trace_outer_sum_35322452 () : Lemma (
+    canonical #10 [2; 5; 4; 2; 2; 3; 5; 3] /\
+    [2; 5; 4; 2; 2; 3; 5; 3] <> [] /\
+    length (trace_digits [2; 5; 4; 2; 2; 3; 5; 3]) ==
+      length [2; 5; 4; 2; 2; 3; 5; 3] /\
+    nth (trace_carries [2; 5; 4; 2; 2; 3; 5; 3])
+      (length [2; 5; 4; 2; 2; 3; 5; 3]) == Some 0 /\
+    trace_sum_at [2; 5; 4; 2; 2; 3; 5; 3] 0 == 5 /\
+    trace_carry_at [2; 5; 4; 2; 2; 3; 5; 3]
+      (length [2; 5; 4; 2; 2; 3; 5; 3] - 1) == 1) =
+  assert (canonical #10 [2; 5; 4; 2; 2; 3; 5; 3]);
+  assert ([2; 5; 4; 2; 2; 3; 5; 3] <> []);
+  let source : numeral 10 = [2; 5; 4; 2; 2; 3; 5; 3] in
+  assert (source == [2; 5; 4; 2; 2; 3; 5; 3]);
+  assert (source <> []);
+  reverse_first_is_last #(digit 10) source;
+  assert (nth (rev source) 0 == Some (last source));
+  assert (last source == 3);
+  assert (digit_at #10 source 0 == 2);
+  assert (digit_at #10 (rev source) 0 == 3);
+  assert (trace_sum_at source 0 ==
+    digit_at #10 source 0 + digit_at #10 (rev source) 0);
+  assert (trace_sum_at source 0 == 5);
+  assert (trace_sum_at [2; 5; 4; 2; 2; 3; 5; 3] 0 == 5);
+  trace_no_overflow_35322452 ();
+  ()
+
+let local_profile_witness_60744805 () : Lemma (
+    trace_local_profile_complement_witness
+      [5; 0; 8; 4; 4; 7; 0; 6]) =
+  trace_outer_sum_35322452 ();
+  reverse_add_35322452_to_60744805 ();
+  trace_profile_60744805 ();
+  assert (2 <= length (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]));
+  assert (trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) 2 == 15);
+  assert (trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) 1 == 0);
+  assert (15 >= 0 + 12);
+  assert (trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) 2 >=
+    trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) 1 + 12);
+  exists_intro
+    (fun (i:nat) -> 0 < i /\
+      i <= length (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) /\
+      (trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) i >=
+         trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) (i - 1) + 12 \/
+       trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) (i - 1) >=
+         trace_sum_at (reverse_add #10 [2; 5; 4; 2; 2; 3; 5; 3]) i + 12))
+    2;
+  no_overflow_outer_sum_5_carry1_jump_implies_next_witness
+    [2; 5; 4; 2; 2; 3; 5; 3];
   ()
 
 let trace_palindrome_obstruction_60744805 () : Lemma (
