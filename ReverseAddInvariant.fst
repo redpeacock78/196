@@ -4,6 +4,7 @@ open ReverseAdd
 open ReverseAddCarry
 open ReverseAddWitness
 open ReverseAddHighSum
+open ReverseAddOverflowProfile
 open ReverseAddFixedWidth
 open FStar.Classical
 open FStar.List.Tot
@@ -1809,3 +1810,41 @@ let conditional_196_no_palindrome
   candidate_witness_196 ();
   all_iterate_candidate_witness_step_excludes_palindrome
     digits_196 preserved
+
+let rec iterate_local_profile_from_step
+  (xs:numeral 10)
+  (preserved:(y:numeral 10 -> Lemma (
+      requires (~(trace_local_palindrome_profile y)))
+      (ensures (~(trace_local_palindrome_profile (reverse_add y))))))
+  (k:nat)
+  : Lemma (requires (~(trace_local_palindrome_profile xs)))
+    (ensures (~(trace_local_palindrome_profile (iterate k xs))))
+    (decreases k) =
+  if k = 0 then
+    ()
+  else
+    let k' : nat = k - 1 in
+    iterate_local_profile_from_step xs preserved k';
+    iterate_succ #10 k' xs;
+    preserved (iterate k' xs);
+    ()
+
+let conditional_196_local_profile_no_palindrome
+  (preserved:(y:numeral 10 -> Lemma (
+      requires (~(trace_local_palindrome_profile y)))
+      (ensures (~(trace_local_palindrome_profile (reverse_add y))))))
+  : Lemma (ensures (forall (k:nat).
+      ~ (palindrome #10 (iterate (k + 1) digits_196)))) =
+  digits_196_canonical_nonempty ();
+  local_profile_196_is_false ();
+  introduce forall (k:nat).
+    ~ (palindrome #10 (iterate (k + 1) digits_196))
+  with (
+    introduce (palindrome #10 (iterate (k + 1) digits_196)) ==> False
+    with (
+      iterate_local_profile_from_step digits_196 preserved k;
+      iterate_canonical #10 k digits_196;
+      iterate_nonempty #10 k digits_196;
+      iterate_succ #10 k digits_196;
+      reverse_add_local_profile_excludes_palindrome
+        (iterate k digits_196)))
