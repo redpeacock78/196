@@ -861,3 +861,38 @@ let trace_profile_shape_10755470 () : Lemma (
   assert ([0; 7; 4; 5; 5; 7; 0; 1] <> []);
   assert (length [0; 7; 4; 5; 5; 7; 0; 1] == 8);
   ()
+
+let trace_profile_facts_18211171 () : Lemma (
+    trace_digits [1; 7; 1; 1; 1; 2; 8; 1] ==
+      [2; 5; 4; 2; 2; 3; 5; 3] /\
+    trace_carries [1; 7; 1; 1; 1; 2; 8; 1] ==
+      [0; 0; 1; 0; 0; 0; 0; 1; 0] /\
+    trace_sum_at [1; 7; 1; 1; 1; 2; 8; 1] 0 == 2 /\
+    trace_sum_at [1; 7; 1; 1; 1; 2; 8; 1] 1 == 15) =
+  assert (trace_digits [1; 7; 1; 1; 1; 2; 8; 1] ==
+    [2; 5; 4; 2; 2; 3; 5; 3]);
+  assert (trace_carries [1; 7; 1; 1; 1; 2; 8; 1] ==
+    [0; 0; 1; 0; 0; 0; 0; 1; 0]);
+  assert (trace_sum_at [1; 7; 1; 1; 1; 2; 8; 1] 0 == 2);
+  assert (trace_sum_at [1; 7; 1; 1; 1; 2; 8; 1] 1 == 15);
+  ()
+
+let trace_profile_shape_18211171 () : Lemma (
+    canonical #10 [1; 7; 1; 1; 1; 2; 8; 1] /\
+    [1; 7; 1; 1; 1; 2; 8; 1] <> [] /\
+    length [1; 7; 1; 1; 1; 2; 8; 1] == 8) =
+  assert (canonical #10 [1; 7; 1; 1; 1; 2; 8; 1]);
+  assert ([1; 7; 1; 1; 1; 2; 8; 1] <> []);
+  assert (length [1; 7; 1; 1; 1; 2; 8; 1] == 8);
+  ()
+
+let trace_no_overflow_18211171 () : Lemma (
+    length (trace_digits [1; 7; 1; 1; 1; 2; 8; 1]) ==
+      length [1; 7; 1; 1; 1; 2; 8; 1] /\
+    nth (trace_carries [1; 7; 1; 1; 1; 2; 8; 1])
+      (length [1; 7; 1; 1; 1; 2; 8; 1]) == Some 0) =
+  assert (length (trace_digits [1; 7; 1; 1; 1; 2; 8; 1]) ==
+    length [1; 7; 1; 1; 1; 2; 8; 1]);
+  assert (nth (trace_carries [1; 7; 1; 1; 1; 2; 8; 1])
+    (length [1; 7; 1; 1; 1; 2; 8; 1]) == Some 0);
+  ()

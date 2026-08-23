@@ -31,6 +31,7 @@ Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little
 overflow 段では、現在外側和10を除けば次段外側和1/11が不可能であることを `overflow_outer_sum_not_10_implies_next_outer_not_1_or_11` が示し、内部 pair 和10以上と組み合わせた `overflow_internal_cell_implies_next_witness` を `887 -> 1675` に適用しています。
 外側和10の例外でも次段が no-overflow なら、`overflow_to_no_overflow_internal_cell_implies_next_witness` が内部 pair 和10以上を witness として保存し、`1067869 -> 10755470` に適用できます。
 続く no-overflow 段 `10755470 -> 18211171` では、`trace_profile_facts_10755470` が固定する内部セル `i=1` を `no_overflow_outer_sum_1_to_4_cell_implies_next_witness` へ渡しています。
+さらに `18211171 -> 35322452` も、内部セル `i=1` の pair 和 `15` と carry 条件を同じ補題へ渡しています。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。

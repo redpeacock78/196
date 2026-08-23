@@ -1629,6 +1629,30 @@ let local_profile_witness_18211171 () : Lemma (
     [0; 7; 4; 5; 5; 7; 0; 1];
   ()
 
+// The same no-overflow low-sum rule discharges the following boundary at
+// 18211171 -> 35322452 using the internal cell i=1.
+let local_profile_witness_35322452 () : Lemma (
+    trace_local_profile_complement_witness
+      [2; 5; 4; 2; 2; 3; 5; 3]) =
+  trace_profile_shape_18211171 ();
+  trace_profile_facts_18211171 ();
+  trace_no_overflow_18211171 ();
+  reverse_add_18211171_to_35322452 ();
+  exists_intro
+    (fun (i:nat) -> i < length [1; 7; 1; 1; 1; 2; 8; 1] /\
+      2 * trace_sum_at [1; 7; 1; 1; 1; 2; 8; 1] i +
+          trace_carry_at [1; 7; 1; 1; 1; 2; 8; 1] i +
+          trace_carry_at [1; 7; 1; 1; 1; 2; 8; 1]
+            (length [1; 7; 1; 1; 1; 2; 8; 1] - 1 - i) >=
+        10 + 10 *
+          (trace_carry_at [1; 7; 1; 1; 1; 2; 8; 1] (i + 1) +
+           trace_carry_at [1; 7; 1; 1; 1; 2; 8; 1]
+             (length [1; 7; 1; 1; 1; 2; 8; 1] - i)))
+    1;
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness
+    [1; 7; 1; 1; 1; 2; 8; 1];
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
