@@ -1746,6 +1746,13 @@ let local_profile_witness_1800098901007 () : Lemma (
   ReverseAddBoundary.local_profile_witness_1800098901007 ();
   ()
 
+// The no-overflow outer-sum rule discharges 1800098901007 -> 8801197801088.
+let local_profile_witness_8801197801088 () : Lemma (
+    trace_local_profile_complement_witness
+      [8; 8; 0; 1; 0; 8; 7; 9; 1; 1; 0; 8; 8]) =
+  ReverseAddBoundary.local_profile_witness_8801197801088 ();
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
