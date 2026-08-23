@@ -736,6 +736,73 @@ let local_profile_witness_84724043932847 () : Lemma (
     [6; 7; 1; 2; 1; 7; 5; 8; 2; 2; 0; 6; 7; 1];
   ()
 
+let trace_profile_84724043932847 () : Lemma (
+    trace_digits [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] ==
+      [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] /\
+    trace_carries [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] ==
+      [0; 1; 0; 1; 0; 0; 0; 0; 0; 0; 0; 0; 1; 0; 1] /\
+    length (trace_digits [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]) ==
+      length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] + 1 /\
+    nth (trace_carries [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8])
+      (length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]) == Some 1 /\
+    trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 0 == 15 /\
+    trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 1 == 8 /\
+    trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 13 == 15) =
+  assert (trace_digits [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] ==
+    [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]);
+  assert (trace_carries [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] ==
+    [0; 1; 0; 1; 0; 0; 0; 0; 0; 0; 0; 0; 1; 0; 1]);
+  assert (trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 0 == 15);
+  assert (trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 1 == 8);
+  assert (trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 13 == 15);
+  ()
+
+let overflow_precondition_84724043932847 () : Lemma (
+    canonical #10 [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] /\
+    [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] <> [] /\
+    length (trace_digits [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]) ==
+      length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] + 1 /\
+    nth (trace_carries [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8])
+      (length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]) == Some 1 /\
+    1 <= trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 0 /\
+    trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 0 <= 18 /\
+    trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] 0 <> 10 /\
+    exists (i:nat). 0 < i /\
+      i < length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] /\
+      trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] i +
+          trace_sum_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]
+            (length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] - i) +
+          trace_carry_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] i +
+          trace_carry_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]
+            (length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] - i) >=
+        10 + 10 *
+          (trace_carry_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] (i + 1) +
+           trace_carry_at [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]
+             (length [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] - i + 1))) =
+  trace_profile_84724043932847 ();
+  assert (canonical #10 [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8]);
+  assert ([7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] <> []);
+  let source : numeral 10 = [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8] in
+  let n : nat = length source in
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < n /\
+      trace_sum_at source i + trace_sum_at source (n - i) +
+          trace_carry_at source i + trace_carry_at source (n - i) >=
+        10 + 10 *
+          (trace_carry_at source (i + 1) +
+           trace_carry_at source (n - i + 1)))
+    1;
+  ()
+
+let local_profile_witness_159547977975595 () : Lemma (
+    trace_local_profile_complement_witness
+      [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]) =
+  overflow_precondition_84724043932847 ();
+  reverse_add_84724043932847_to_159547977975595 ();
+  overflow_internal_cell_implies_next_witness
+    [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
