@@ -22,6 +22,7 @@ Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little
 任意個数の鏡像セルについて同じ carry 対称性を導く代数補題と、桁あふれありの回文なら最下位 output 桁が `1` になる端点条件も置いています。
 さらに `add_trace` の任意長 trace をこの境界へ接続し、桁あふれなしの回文 output なら carry-in prefix が対称になることを検証しています。
 この一般補題を使って `196` の一段目も排除しています。
+`ReverseAddOverflowProfile.fst` は overflow の sum/carry relation を局所桁方程式へ逆向きに接続し、その relation から output 桁の pointwise 対称性を再構成します。overflow 側でも、回文必要条件を桁対称性へ戻す sound な接続を分離しています。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。

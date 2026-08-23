@@ -16,6 +16,7 @@ CHECK = "$(FSTAR)" \
 verify:
 	$(CHECK) ReverseAdd.fst
 	$(CHECK) ReverseAddCarry.fst
+	$(CHECK) ReverseAddOverflowProfile.fst
 	$(CHECK) ReverseAddCarrySummary.fst
 	$(CHECK) ReverseAddWitness.fst
 	$(CHECK) ReverseAddHighSum.fst
