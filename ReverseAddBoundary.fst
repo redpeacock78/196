@@ -803,6 +803,34 @@ let local_profile_witness_159547977975595 () : Lemma (
     [7; 4; 8; 2; 3; 9; 3; 4; 0; 4; 2; 7; 4; 8];
   ()
 
+let trace_profile_159547977975595 () : Lemma (
+    trace_digits [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] ==
+      [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7] /\
+    trace_carries [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] ==
+      [0; 0; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 0] /\
+    length (trace_digits [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]) ==
+      length [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] /\
+    nth (trace_carries [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1])
+      (length [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]) == Some 0 /\
+    trace_sum_at [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] 0 == 6) =
+  assert (trace_digits [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] ==
+    [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7]);
+  assert (trace_carries [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] ==
+    [0; 0; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 1; 0]);
+  assert (trace_sum_at [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] 0 == 6);
+  ()
+
+let local_profile_witness_755127757721546 () : Lemma (
+    trace_local_profile_complement_witness
+      [6; 4; 5; 1; 2; 7; 7; 5; 7; 7; 2; 1; 5; 5; 7]) =
+  assert (canonical #10 [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1]);
+  assert ([5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1] <> []);
+  trace_profile_159547977975595 ();
+  reverse_add_159547977975595_to_755127757721546 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    [5; 9; 5; 5; 7; 9; 7; 7; 9; 7; 4; 5; 9; 5; 1];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
