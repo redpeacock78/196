@@ -1683,6 +1683,13 @@ let local_profile_witness_454050344 () : Lemma (
   ReverseAddBoundary.local_profile_witness_454050344 ();
   ()
 
+// The no-overflow outer-sum rule discharges 454050344 -> 897100798.
+let local_profile_witness_897100798 () : Lemma (
+    trace_local_profile_complement_witness
+      [8; 9; 7; 0; 0; 1; 7; 9; 8]) =
+  ReverseAddBoundary.local_profile_witness_897100798 ();
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
@@ -1833,7 +1840,8 @@ let rec iterate_candidate_witness_from_step
   if k = 0 then
     ()
   else
-    let k' : nat = k - 1 in
+    let one : nat = 1 in
+    let k' : nat = k - one in
     iterate_candidate_witness_from_step xs preserved k';
     iterate_succ #10 k' xs;
     preserved (iterate k' xs);
