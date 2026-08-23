@@ -200,6 +200,47 @@ let local_profile_witness_227574622 () : Lemma (
     [1; 1; 5; 9; 8; 5; 1; 1; 1];
   ()
 
+let trace_profile_227574622 () : Lemma (
+    trace_digits [2; 2; 6; 4; 7; 5; 7; 2; 2] ==
+      [4; 4; 3; 0; 5; 0; 4; 5; 4] /\
+    trace_carries [2; 2; 6; 4; 7; 5; 7; 2; 2] ==
+      [0; 0; 0; 1; 1; 1; 1; 1; 0; 0] /\
+    length (trace_digits [2; 2; 6; 4; 7; 5; 7; 2; 2]) ==
+      length [2; 2; 6; 4; 7; 5; 7; 2; 2] /\
+    nth (trace_carries [2; 2; 6; 4; 7; 5; 7; 2; 2])
+      (length [2; 2; 6; 4; 7; 5; 7; 2; 2]) == Some 0 /\
+    trace_sum_at [2; 2; 6; 4; 7; 5; 7; 2; 2] 0 == 4 /\
+    trace_sum_at [2; 2; 6; 4; 7; 5; 7; 2; 2] 4 == 14) =
+  assert (trace_digits [2; 2; 6; 4; 7; 5; 7; 2; 2] ==
+    [4; 4; 3; 0; 5; 0; 4; 5; 4]);
+  assert (trace_carries [2; 2; 6; 4; 7; 5; 7; 2; 2] ==
+    [0; 0; 0; 1; 1; 1; 1; 1; 0; 0]);
+  assert (trace_sum_at [2; 2; 6; 4; 7; 5; 7; 2; 2] 0 == 4);
+  assert (trace_sum_at [2; 2; 6; 4; 7; 5; 7; 2; 2] 4 == 14);
+  ()
+
+let local_profile_witness_454050344 () : Lemma (
+    trace_local_profile_complement_witness
+      [4; 4; 3; 0; 5; 0; 4; 5; 4]) =
+  assert (canonical #10 [2; 2; 6; 4; 7; 5; 7; 2; 2]);
+  assert ([2; 2; 6; 4; 7; 5; 7; 2; 2] <> []);
+  trace_profile_227574622 ();
+  reverse_add_227574622_to_454050344 ();
+  exists_intro
+    (fun (i:nat) -> i < length [2; 2; 6; 4; 7; 5; 7; 2; 2] /\
+      2 * trace_sum_at [2; 2; 6; 4; 7; 5; 7; 2; 2] i +
+          trace_carry_at [2; 2; 6; 4; 7; 5; 7; 2; 2] i +
+          trace_carry_at [2; 2; 6; 4; 7; 5; 7; 2; 2]
+            (length [2; 2; 6; 4; 7; 5; 7; 2; 2] - 1 - i) >=
+        10 + 10 *
+          (trace_carry_at [2; 2; 6; 4; 7; 5; 7; 2; 2] (i + 1) +
+           trace_carry_at [2; 2; 6; 4; 7; 5; 7; 2; 2]
+             (length [2; 2; 6; 4; 7; 5; 7; 2; 2] - i)))
+    4;
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness
+    [2; 2; 6; 4; 7; 5; 7; 2; 2];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
