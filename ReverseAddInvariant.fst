@@ -1535,6 +1535,34 @@ let local_profile_witness_52514 () : Lemma (
   no_overflow_outer_sum_1_to_4_cell_implies_next_witness digits_13783;
   ()
 
+// The overflow rule also discharges the concrete 887 -> 1675 boundary.
+let local_profile_witness_1675 () : Lemma (
+    trace_local_profile_complement_witness digits_1675) =
+  assert (digits_887 == [7; 8; 8]);
+  assert (digits_1675 == [5; 7; 6; 1]);
+  assert (canonical digits_887);
+  assert (digits_887 <> []);
+  assert (length (trace_digits digits_887) == length digits_887 + 1);
+  assert (nth (trace_carries digits_887) (length digits_887) == Some 1);
+  assert (trace_sum_at digits_887 0 == 15);
+  assert (trace_sum_at digits_887 1 == 16);
+  assert (trace_sum_at digits_887 2 == 15);
+  assert (trace_carry_at digits_887 1 == 1);
+  assert (trace_carry_at digits_887 2 == 1);
+  assert (trace_carry_at digits_887 3 == 1);
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < length digits_887 /\
+      trace_sum_at digits_887 i +
+          trace_sum_at digits_887 (length digits_887 - i) +
+          trace_carry_at digits_887 i +
+          trace_carry_at digits_887 (length digits_887 - i) >=
+        10 + 10 * (trace_carry_at digits_887 (i + 1) +
+          trace_carry_at digits_887 (length digits_887 - i + 1)))
+    1;
+  assert (reverse_add #10 digits_887 == digits_1675);
+  overflow_internal_cell_implies_next_witness digits_887;
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\
