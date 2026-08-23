@@ -1662,6 +1662,13 @@ let local_profile_witness_60744805 () : Lemma (
   ReverseAddBoundary.local_profile_witness_60744805 ();
   ()
 
+// The overflow internal-cell rule discharges 60744805 -> 111589511.
+let local_profile_witness_111589511 () : Lemma (
+    trace_local_profile_complement_witness
+      [1; 1; 5; 9; 8; 5; 1; 1; 1]) =
+  ReverseAddBoundary.local_profile_witness_111589511 ();
+  ()
+
 let finite_196_candidate_prefix () : Lemma (
     ~ (trace_palindrome_candidate (iterate 0 digits_196)) /\
     ~ (trace_palindrome_candidate (iterate 1 digits_196)) /\

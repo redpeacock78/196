@@ -107,6 +107,58 @@ let local_profile_witness_60744805 () : Lemma (
     [2; 5; 4; 2; 2; 3; 5; 3];
   ()
 
+// The following overflow step uses the internal-cell rule at i=3.
+let trace_outer_sum_60744805 () : Lemma (
+    canonical #10 [5; 0; 8; 4; 4; 7; 0; 6] /\
+    [5; 0; 8; 4; 4; 7; 0; 6] <> [] /\
+    length (trace_digits [5; 0; 8; 4; 4; 7; 0; 6]) ==
+      length [5; 0; 8; 4; 4; 7; 0; 6] + 1 /\
+    nth (trace_carries [5; 0; 8; 4; 4; 7; 0; 6])
+      (length [5; 0; 8; 4; 4; 7; 0; 6]) == Some 1 /\
+    1 <= trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 0 /\
+    trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 0 <= 18 /\
+    trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 0 <> 10) =
+  assert (canonical #10 [5; 0; 8; 4; 4; 7; 0; 6]);
+  assert ([5; 0; 8; 4; 4; 7; 0; 6] <> []);
+  let source : numeral 10 = [5; 0; 8; 4; 4; 7; 0; 6] in
+  assert (source == [5; 0; 8; 4; 4; 7; 0; 6]);
+  reverse_first_is_last #(digit 10) source;
+  assert (nth (rev source) 0 == Some (last source));
+  assert (last source == 6);
+  assert (digit_at #10 source 0 == 5);
+  assert (digit_at #10 (rev source) 0 == 6);
+  assert (trace_sum_at source 0 ==
+    digit_at #10 source 0 + digit_at #10 (rev source) 0);
+  assert (trace_sum_at source 0 == 11);
+  assert (trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 0 == 11);
+  trace_profile_60744805 ();
+  ()
+
+let local_profile_witness_111589511 () : Lemma (
+    trace_local_profile_complement_witness
+      [1; 1; 5; 9; 8; 5; 1; 1; 1]) =
+  trace_outer_sum_60744805 ();
+  trace_profile_60744805 ();
+  assert (trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 3 == 8);
+  assert (trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] 5 == 15);
+  reverse_add_60744805_to_111589511 ();
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < length [5; 0; 8; 4; 4; 7; 0; 6] /\
+      trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6] i +
+          trace_sum_at [5; 0; 8; 4; 4; 7; 0; 6]
+            (length [5; 0; 8; 4; 4; 7; 0; 6] - i) +
+          trace_carry_at [5; 0; 8; 4; 4; 7; 0; 6] i +
+          trace_carry_at [5; 0; 8; 4; 4; 7; 0; 6]
+            (length [5; 0; 8; 4; 4; 7; 0; 6] - i) >=
+        10 + 10 *
+          (trace_carry_at [5; 0; 8; 4; 4; 7; 0; 6] (i + 1) +
+           trace_carry_at [5; 0; 8; 4; 4; 7; 0; 6]
+             (length [5; 0; 8; 4; 4; 7; 0; 6] - i + 1)))
+    3;
+  overflow_internal_cell_implies_next_witness
+    [5; 0; 8; 4; 4; 7; 0; 6];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();
