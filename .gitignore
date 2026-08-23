@@ -1,0 +1,4 @@
+.fstar-cache/
+*.fst.checked
+.memsearch/
+/[0-9]*

@@ -1,0 +1,128 @@
+# Reverse-and-Add / F*
+
+Phase 1/2 のモデルと、汎用の有限抽象 checker です。桁は little-endian（最下位桁から）で、空リストを 0 とします。
+
+`ReverseAdd.fst` は次を検証します。
+
+- 基数・桁・数表現、正規化、値関数
+- 正規化付き桁反転
+- 自然数からの桁列復元と `reverse_base`
+- carry を含む桁単位加算
+- `reverse_add`、回文 predicate、`step` 関係
+- `value (reverse_digits xs) == reverse_base (value xs)`（canonical 入力）
+- `value (reverse_add xs) == value xs + reverse_base (value xs)`（canonical 入力）
+- `predecessor`、`iterate`、`reaches`
+- `56 -> 121`、`196 -> 887`、base 2 の検算
+
+`ReverseAddCarry.fst` は桁加算の output と carry profile を同時に追跡し、
+既存の `add_digits` と output が一致することを検証します。196 の一段目の carry profile
+も固定値として確認し、同じ出力桁を生む対称セルでは carry in/out が一致する必要条件を置いています。
+さらに 3 桁の `abc + cba` について、桁あふれなしの回文 output なら carry prefix が対称になることを検証し、
+`196` の一段目をこの条件から排除しています。
+任意個数の鏡像セルについて同じ carry 対称性を導く代数補題と、桁あふれありの回文なら最下位 output 桁が `1` になる端点条件も置いています。
+さらに `add_trace` の任意長 trace をこの境界へ接続し、桁あふれなしの回文 output なら carry-in prefix が対称になることを検証しています。
+この一般補題を使って `196` の一段目も排除しています。
+`reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
+`trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
+overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。
+`trace_palindrome_obstruction` は通常の carry obstruction と overflow の和・carry obstruction を統合し、どちらからでも回文 output を排除できる soundness を持ちます。
+`ReverseAddCarrySummary.fst` は、任意長の桁和列を2値carry関数の合成へ要約し、合成の単位元・結合則と `add_trace` の最終carryとの一致を検証します。これは桁数に依存しないcarry abstractionの基礎ですが、carry profile全体の対称性まではまだ要約していません。
+`ReverseAddHighSum.fst` は、桁あふれなしで先行する桁和がすべて10未満なら、最初の高い桁和から carry mismatch を index 付きで導きます。さらに no-overflow の回文 output なら全桁和が10未満である必要条件を検証します。`1675` への適用まで検証していますが、全 carry profile の対称性はまだ証明していません。
+`ReverseAddWitness.fst` は、この obstruction を carry mismatch index または overflow relation mismatch index の具体 witness として扱う soundness 層です。将来の保存性証明が index を追跡できるようにします。
+同ファイルの `trace_overflow_sum_jump_obstruction_at` は、隣接する桁和の差が carry 補正幅11を超えると overflow relation obstruction になる一般補題です。回文 output ではこの jump がなく、端点和は `1` または `11` に限られることも検証します。端点和がそれ以外なら index 0 の low-one obstruction へ接続します。
+`trace_palindrome_candidate` は、回文 output が必ず入る no-overflow（全桁和が10未満）または overflow（端点和が11で隣接桁和の12以上の jump がない）の粗い必要条件 profile です。`trace_palindrome_implies_candidate` でこの分類を検証し、196-specific invariant の目標へ接続しています。
+`trace_overflow_outer_sum_one_impossible` は、overflow candidate では対称な最終セルのため端点和 `1` が成立しないことを検証し、`trace_palindrome_candidate` の overflow 側を端点和 `11` に絞ります。
+`trace_not_candidate_implies_obstruction` はこの profile の補集合を no-overflow の高い桁和、または overflow の端点/jump witness へ戻します。
+`trace_candidate_complement_witness` はその branch-local witness 型を明示し、`trace_not_candidate_implies_witness` と `trace_candidate_witness_implies_obstruction` により、candidate 補集合から witness、witness から indexed obstruction への往復を検証します。
+`trace_candidate_witness_implies_not_candidate` も検証し、4 branch-local witness から candidate 補集合へ戻せることを固定します。
+`all_iterate_candidate_witness_from_step` と `all_iterate_candidate_witness_step_excludes_palindrome` は、一段の candidate witness 保存補題を全 iterate の回文排除へ持ち上げる接続部です。保存補題そのものはまだ 196 固有に実体化していません。
+`finite_196_candidate_witness_prefix` は既存の 196 の iterate 0..6 の有限証拠をこの witness 型へ変換します。
+`all_iterate_not_candidate_excludes_palindrome` は、196 軌道の各段が candidate profile の補集合にあるという不変量から、全反復の回文到達不能性へ接続します。残る 196-specific obligation はこの補集合の全段保存です。
+`all_iterate_not_candidate_step_excludes_palindrome` は、その保存条件を一段の `preserved` lemma に分解します。196-specific 作業はこの一段 closure の実体化です。
+`trace_candidate_not_preserved_19` は `19 -> 110` で candidate 補集合自体も保存されないことを固定します。したがって、196 では追加の状態条件を含む closure が必要です。
+`trace_no_overflow_high_sum_not_candidate` と `trace_overflow_outer_sum_not_candidate` は、candidate 補集合を高い桁和または overflow 端点条件から直接導きます。`finite_196_candidate_prefix` は 196 の iterate 0..6 についてこの profile を形式化し、high-sum、low-one、carry mismatch、outer mismatch の各 converse を実際に使用します。
+`trace_no_overflow_carry_obstruction_not_candidate` は no-overflow carry mismatch witness からも candidate 補集合を直接導きます。
+`trace_overflow_sum_jump_not_candidate` は、overflow branch の隣接桁和 jump を candidate 補集合へ直接接続します。`ReverseAddBoundary.fst` の `trace_profile_60744805` と `ReverseAddCEGAR.fst` の `candidate_witness_60744805_boundary` は、具体的な 196 境界 trace からこの jump witness を candidate 補集合へ戻す適用も検証します。
+`trace_overflow_low_one_not_candidate` は、overflow の low-one obstruction も candidate 補集合へ接続します。これで candidate 補集合へ戻す branch-local converse は、no-overflow high-sum、overflow low-one、overflow outer、overflow jump の4種類になりました。
+`candidate_boundary_sound_60744805` は、この具体 witness を candidate 非該当と indexed obstruction の両方へ接続します。
+`ReverseAddBoundary.fst` は、単純 obstruction が初めて破れる `60744805` を境界回帰として検証し、旧条件が偽になること、複合 obstruction ではその reverse-add output を排除できることを確認します。
+`iterate_next_obstruction_excludes_palindrome` は、任意の iterate 段について、現在段の複合 obstruction が次段の回文を排除する bridge です。
+`trace_digits_equals_reverse_add` は、canonical で非空な入力について、この bridge が必要とする trace と `reverse_add` の一致を一般化します。
+`finite_196_prefix_obstruction` は、その前提を `iterate 0..5` の有限 prefix で明示的に満たします。
+`all_iterate_obstructions_exclude_palindrome` は、196 に限らず全 iterate 段で複合 obstruction が成立するという仮定から、次段以降の回文到達不能を帰結します。
+`all_iterate_indexed_witnesses_exclude_palindrome` は、各段の mismatch index を関数 `w` で追跡する stronger な条件から同じ帰結を導きます。
+`iterate_indexed_witness_excludes_palindrome` は、その条件を一段ごとの有限 bridge として切り出します。
+`trace_palindrome_obstruction_at_exists` と `all_iterate_obstructions_have_indexed_witnesses` は、複合 obstruction から各段の index witness の存在を導きます。
+`trace_overflow_outer_obstruction_at_sound` は、overflow時の端点和条件違反を index 0 の具体 witness へ持ち上げます。将来の196-specific invariantで、overflow branchを端点条件として扱うための接続です。
+`all_iterate_existential_witnesses_exclude_palindrome` は、関数選択なしに各段の existential witness だけから次段の回文を排除します。
+`iterate_obstruction_from_step` と `all_iterate_obstructions_from_step` は、各段で existential obstruction が一段先へ保存されるという単一の仮定を全反復へ持ち上げます。`all_iterate_obstruction_step_excludes_palindrome` は、このclosure条件を既存の回文排除bridgeへ接続します。
+`trace_palindrome_obstruction_exists_not_preserved_19` は、`19 -> 110` でこのclosureが失敗することを固定し、単純な obstruction の再利用ではないことを検証します。
+`trace_palindrome_obstruction_exists_not_preserved_11_1199` は、11の倍数でも `1199 -> 11110 -> 12221` で同じclosureが失敗することを固定します。したがって、196で成立する11倍数不変量だけでは不足します。
+`witness_index_196` は確認済み prefix の witness index を関数化し、`finite_196_indexed_nonpalindrome`（`iterate 1..7`）と `finite_196_suffix_indexed_nonpalindrome`（`iterate 8..30`）へ接続します。`finite_196_prefix_nonpalindrome` が両方を結合し、`iterate 12` の `60744805` 以降も overflow/no-overflow の局所 witness を明示します。
+この全段 obstruction の保存自体は、196 についてまだ証明していません。
+`trace_palindrome_obstruction_not_inductive_19` は、obstruction 単体をそのまま inductive invariant にできない境界例 `19 -> 110 -> 121` を固定します。
+overflow 側の `887 -> 1675` と `7436 -> 13783` は最下位桁条件で、続く `1675 -> 7436` は carry prefix の非対称性で排除しています。
+さらに `7436 -> 13783 -> 52514 -> 94039 -> 187088 -> 1067869 -> 10755470 -> 18211171 -> 35322452 -> 60744805 -> 111589511 -> 227574622 -> 454050344 -> 897100798 -> 1794102596 -> 8746117567 -> 16403234045 -> 70446464506 -> 130992928913 -> 450822227944 -> 900544455998 -> 1800098901007 -> 8801197801088 -> 17602285712176 -> 84724043932847 -> 159547977975595 -> 755127757721546 -> 1400255515443103` の各遷移と、iterate 29 までの trace obstruction を検証し、`iterate 30 digits_196 == digits_1400255515443103` まで有限 prefix を延長しています。`finite_196_prefix_nonpalindrome` は `iterate 1..30` の各状態が回文でないことを一つの bounded lemma にまとめています。
+
+`AbstractReachability.fst` は、`0 <= state < count` の有限状態グラフに対して、
+燃料の範囲で到達集合を計算し、追加がなくなれば固定点として扱います。
+燃料が尽きた場合は `Unknown` とし、`Unreachable states` を返した場合の
+`check_bad_sound` を F* で証明しています。`check_bad_fuel` で bounded CEGAR
+試行も実行できます。
+`reverse_edge`、`predecessors`、`closure_reverse` も備え、target からの逆向き探索を
+`backward_checker_sound` で sound に扱えます。
+`invariant_on_closure` と `invariant_excludes_bad` は、有限 fuel に依存しない
+invariant proof の入口です。
+`AbstractReachabilityExample.fst` には小さな到達/到達不能グラフを置いています。
+`ReverseAddResidue.fst` は `value mod m` の最初の抽象です。
+edge を universal にしているため sound ですが粗く、到達不能性を証明する用途にはまだ使いません。
+`ReverseAddModPair.fst` は `value mod m` と
+`value (reverse_digits xs) mod m` のペアを `m^2` 状態へ写します。
+具体的な一段遷移が抽象 edge に含まれること、palindrome が抽象 bad 状態へ写ること、
+その抽象 checker の `Unreachable` 結果が concrete の反例を排除することを証明しています。
+また、pair state から residue state への射影と concrete abstraction の整合性も証明しています。
+ただし、これはまだ 196 の到達不能性を返す抽象としては精密さを確認していません。
+`ReverseAddBlockCarry.fst` は `m` 幅の residue block と、その block sum の carry を
+`2*m^2` 状態へ符号化します。source/target の carry 整合性を edge に含め、
+concrete transition と palindrome predicate の soundness を証明しています。
+`m=b^k` と選べば、これは k 桁ブロックの carry 抽象として利用できます。
+`ReverseAdd196.fst` では base 10 の 196 に対し、`m=2` の粗い抽象が
+concrete の `196 -> 887` とは異なる abstract bad successor を許すことを証明しています。
+これは抽象 counterexample としての CEGAR 入力です。
+`ReverseAddFixedWidth.fst` は width を引数に取り、`10^width` 未満の canonical value を
+exact state、その他を fallback へ写す一般の桁幅 refinement です。concrete transition と
+palindrome soundness、checker の unreachable soundness を検証しています。
+`power10 width > 887` の場合に 196 の一段目が bad にならないことも width-parametric に検証します。
+`ReverseAddInvariant.fst` は、空でない canonical numeral について reverse-and-add の値が
+1 段で厳密に増加することを検証します。これは無限状態での不変量証明に使える補題ですが、
+反復結果の canonical 性・非空性と、任意の正の反復回数での値の狭義増加も検証します。
+さらに 7436 以降の 196 軌道が 11 の倍数であることを、交代和を使って不変量化します。
+`divisible_196_by_11_after_iterate_3` は iterate shift を別抽象にせず、3段目を基点に帰納して `iterate (k+3) digits_196` へこの不変量を直接接続します。
+ただし 11 の倍数だけでは回文を排除できないことも補題で確認しています。
+`iterate_value_at_least` と `fixed_width_fallback_reached` は、strict increase により任意の固定幅で軌道が fallback へ到達することを検証します。したがって、fallbackをbadとする有限 FixedWidth checkerだけでは、196の無限軌道を証明できません。
+196 の palindrome 到達不能性そのものはまだ証明していません。
+`ReverseAddFixed3.fst` はその width=3 wrapper で、196 の一段目では bad state に到達しません。
+`ReverseAddRefinedProduct.fst` は fixed3 情報と block-carry state の積を取り、
+block projection、transition soundness、palindrome soundness を保持します。
+`ReverseAddCEGAR.fst` は stage 列を走査し、abstract `Reachable` の最初の bad state を
+counterexample として次の stage へ渡します。現在は `BlockCarry -> ProductOneStep` の
+2 stage loop を実装し、product stage で `Unknown` を返すところまでです。
+stage の counterexample と探索済み集合に bad がないという分類も F* で sound に取り出せます。
+stage API には `FixedWidth (width, fuel)` もあり、桁幅と bounded 探索深さを差し替えられます。
+`ReverseAddPredecessor.fst` は `0..value y` を調べる bounded predecessor 列挙です。
+候補の soundness と、canonical な concrete predecessor の completeness を証明しています。
+
+## 検証
+
+```sh
+make verify
+```
+
+既定値はこの環境の F* (`$HOME/.everest/FStar`) と Z3 4.15.4 です。
+F* が要求する Z3 4.13.3 を使う場合は、`z3-4.13.3` が PATH にある状態で次を実行します。
+
+```sh
+FSTAR_Z3_VERSION=4.13.3 make verify
+```
+
+この段階では、桁幅 stage を自動生成する汎用 CEGAR と、196 の無限到達不能性定理は未実装です。
