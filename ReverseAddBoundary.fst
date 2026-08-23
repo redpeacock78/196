@@ -1,6 +1,6 @@
 module ReverseAddBoundary
 
-#set-options "--fuel 10 --ifuel 10 --retry 10"
+#set-options "--fuel 20 --ifuel 20 --retry 10"
 
 open ReverseAdd
 open ReverseAddCarry
@@ -267,6 +267,49 @@ let local_profile_witness_897100798 () : Lemma (
   reverse_add_454050344_to_897100798 ();
   no_overflow_outer_sum_6_to_9_implies_next_witness
     [4; 4; 3; 0; 5; 0; 4; 5; 4];
+  ()
+
+let trace_profile_897100798 () : Lemma (
+    trace_digits [8; 9; 7; 0; 0; 1; 7; 9; 8] ==
+      [6; 9; 5; 2; 0; 1; 4; 9; 7; 1] /\
+    trace_carries [8; 9; 7; 0; 0; 1; 7; 9; 8] ==
+      [0; 1; 1; 1; 0; 0; 0; 1; 1; 1] /\
+    length (trace_digits [8; 9; 7; 0; 0; 1; 7; 9; 8]) ==
+      length [8; 9; 7; 0; 0; 1; 7; 9; 8] + 1 /\
+    nth (trace_carries [8; 9; 7; 0; 0; 1; 7; 9; 8])
+      (length [8; 9; 7; 0; 0; 1; 7; 9; 8]) == Some 1 /\
+    trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8] 0 == 16 /\
+    trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8] 1 == 18) =
+  assert (trace_digits [8; 9; 7; 0; 0; 1; 7; 9; 8] ==
+    [6; 9; 5; 2; 0; 1; 4; 9; 7; 1]);
+  assert (trace_carries [8; 9; 7; 0; 0; 1; 7; 9; 8] ==
+    [0; 1; 1; 1; 0; 0; 0; 1; 1; 1]);
+  assert (trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8] 0 == 16);
+  assert (trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8] 1 == 18);
+  ()
+
+let local_profile_witness_1794102596 () : Lemma (
+    trace_local_profile_complement_witness
+      [6; 9; 5; 2; 0; 1; 4; 9; 7; 1]) =
+  assert (canonical #10 [8; 9; 7; 0; 0; 1; 7; 9; 8]);
+  assert ([8; 9; 7; 0; 0; 1; 7; 9; 8] <> []);
+  trace_profile_897100798 ();
+  reverse_add_897100798_to_1794102596 ();
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < length [8; 9; 7; 0; 0; 1; 7; 9; 8] /\
+      trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8] i +
+          trace_sum_at [8; 9; 7; 0; 0; 1; 7; 9; 8]
+            (length [8; 9; 7; 0; 0; 1; 7; 9; 8] - i) +
+          trace_carry_at [8; 9; 7; 0; 0; 1; 7; 9; 8] i +
+          trace_carry_at [8; 9; 7; 0; 0; 1; 7; 9; 8]
+            (length [8; 9; 7; 0; 0; 1; 7; 9; 8] - i) >=
+        10 + 10 *
+          (trace_carry_at [8; 9; 7; 0; 0; 1; 7; 9; 8] (i + 1) +
+           trace_carry_at [8; 9; 7; 0; 0; 1; 7; 9; 8]
+             (length [8; 9; 7; 0; 0; 1; 7; 9; 8] - i + 1)))
+    1;
+  overflow_internal_cell_implies_next_witness
+    [8; 9; 7; 0; 0; 1; 7; 9; 8];
   ()
 
 let trace_palindrome_obstruction_60744805 () : Lemma (
