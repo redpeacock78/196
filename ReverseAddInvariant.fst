@@ -2326,3 +2326,18 @@ let local_profile_witness_1317620482294916822 () : Lemma (
     trace_local_profile_complement_witness digits_1317620482294916822) =
   ReverseAddBoundary.local_profile_witness_1317620482294916822 ();
   ()
+
+let digits_3603815405135183953 : numeral 10 =
+  [3; 5; 9; 3; 8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3]
+
+let reaches_196_3603815405135183953 () : Lemma (
+    iterate 38 digits_196 == digits_3603815405135183953) =
+  reaches_196_1317620482294916822 ();
+  iterate_succ #10 37 digits_196;
+  ReverseAddWitness.reverse_add_1317620482294916822_to_3603815405135183953 ();
+  ()
+
+let local_profile_witness_3603815405135183953 () : Lemma (
+    trace_local_profile_complement_witness digits_3603815405135183953) =
+  ReverseAddBoundary.local_profile_witness_3603815405135183953 ();
+  ()

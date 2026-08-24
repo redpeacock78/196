@@ -165,6 +165,6 @@ F* が要求する Z3 4.13.3 を使う場合は、`z3-4.13.3` が PATH にある
 FSTAR_Z3_VERSION=4.13.3 make verify
 ```
 
-`iterate 36 -> 37` も具体的な遷移と local-profile witness を検証しています（overflow 内部セルケース）。
+`iterate 37 -> 38` も具体的な遷移と local-profile witness を検証しています（no-overflow 外側和1..4・内部セルケース）。
 
 この段階では、桁幅 stage を自動生成する汎用 CEGAR と、196 の無限到達不能性定理は未実装です。

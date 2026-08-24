@@ -1263,3 +1263,14 @@ let local_profile_witness_1317620482294916822 () : Lemma (
   ReverseAddWitness.reverse_add_664304741147513356_to_1317620482294916822 ();
   overflow_internal_cell_implies_next_witness source;
   ()
+
+let local_profile_witness_3603815405135183953 () : Lemma (
+    trace_local_profile_complement_witness
+      [3; 5; 9; 3; 8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3]) =
+  ReverseAddWitness.no_overflow_precondition_source ();
+  ReverseAddWitness.reverse_add_source ();
+  trace_digits_equals_reverse_add ReverseAddWitness.source;
+  ReverseAddWitness.witness_condition_source ();
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness
+    ReverseAddWitness.source;
+  ()
