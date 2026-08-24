@@ -5,6 +5,7 @@ open ReverseAddCarry
 open ReverseAddWitness
 open ReverseAddContinuation
 open ReverseAddBoundary
+open ReverseAddTail
 open ReverseAddHighSum
 open ReverseAddOverflowProfile
 open ReverseAddFixedWidth
@@ -2464,4 +2465,19 @@ let local_profile_witness_93507933867933969538 () : Lemma (
   ReverseAddContinuation.reverse_add_47248966933966985264_to_93507933867933969538 ();
   no_overflow_outer_sum_6_to_9_implies_next_witness
     digits_47248966933966985264;
+  ()
+
+let digits_177104867844767940077 : numeral 10 =
+  [7; 7; 0; 0; 4; 9; 7; 6; 7; 4; 4; 8; 7; 6; 8; 4; 0; 1; 7; 7; 1]
+
+let reaches_196_177104867844767940077 () : Lemma (
+    iterate 43 digits_196 == digits_177104867844767940077) =
+  reaches_196_93507933867933969538 ();
+  iterate_succ #10 42 digits_196;
+  ReverseAddTail.reverse_add_93507933867933969538_to_177104867844767940077 ();
+  ()
+
+let local_profile_witness_177104867844767940077 () : Lemma (
+    trace_local_profile_complement_witness digits_177104867844767940077) =
+  ReverseAddTail.local_profile_witness_177104867844767940077 ();
   ()
