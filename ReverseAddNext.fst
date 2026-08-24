@@ -3388,3 +3388,231 @@ let local_profile_witness_175837936477498486373973857 () : Lemma (
   reverse_add_92918473189299188236491928_to_175837936477498486373973857 ();
   overflow_internal_cell_implies_next_witness next12_source;
   ()
+
+let next13_source : numeral 10 = next12_target
+
+let next13_reversed : numeral 10 =
+  [1; 7; 5; 8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7]
+
+let next13_target : numeral 10 =
+  [8; 2; 4; 2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9]
+
+let reverse_list_next13_source () : Lemma (rev next13_source == next13_reversed) =
+  assert (rev [1] == [1]);
+  rev_cons 7 [1];
+  rev_cons 5 [7; 1];
+  rev_cons 8 [5; 7; 1];
+  rev_cons 3 [8; 5; 7; 1];
+  rev_cons 7 [3; 8; 5; 7; 1];
+  rev_cons 9 [7; 3; 8; 5; 7; 1];
+  rev_cons 3 [9; 7; 3; 8; 5; 7; 1];
+  rev_cons 6 [3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 4 [6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 7 [4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 7 [7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 4 [7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 9 [4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 8 [9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 4 [8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 8 [4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 6 [8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 3 [6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 7 [3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 3 [7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 9 [3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 7 [9; 3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 3 [7; 9; 3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 8 [3; 7; 9; 3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 5 [8; 3; 7; 9; 3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  rev_cons 7 [5; 8; 3; 7; 9; 3; 7; 3; 6; 8; 4; 8; 9; 4; 7; 7; 4; 6; 3; 9; 7; 3; 8; 5; 7; 1];
+  ()
+
+let value_next13_reversed () : Lemma (
+    value next13_reversed == 758379373684894774639738571) =
+  value_cons #10 1 [7; 5; 8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 7 [5; 8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 5 [8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 8 [3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 3 [7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 7 [9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 9 [3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 3 [6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 6 [4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 4 [7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 7 [7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 7 [4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 4 [9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 9 [8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 8 [4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 4 [8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 8 [6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 6 [3; 7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 3 [7; 3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 7 [3; 9; 7; 3; 8; 5; 7];
+  value_cons #10 3 [9; 7; 3; 8; 5; 7];
+  value_cons #10 9 [7; 3; 8; 5; 7];
+  value_cons #10 7 [3; 8; 5; 7];
+  value_cons #10 3 [8; 5; 7];
+  value_cons #10 8 [5; 7];
+  value_cons #10 5 [7];
+  value_cons #10 7 [];
+  ()
+
+let value_next13_target_tail_18 () : Lemma (
+    value #10 [1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9] == 934217310162393261) =
+  value_cons #10 1 [6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 6 [2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 2 [3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 3 [9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 9 [3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 3 [2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 2 [6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 6 [1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 1 [0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 0 [1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 1 [3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 3 [7; 1; 2; 4; 3; 9];
+  value_cons #10 7 [1; 2; 4; 3; 9];
+  value_cons #10 1 [2; 4; 3; 9];
+  value_cons #10 2 [4; 3; 9];
+  value_cons #10 4 [3; 9];
+  value_cons #10 3 [9];
+  value_cons #10 9 [];
+  ()
+
+let value_next13_target () : Lemma (
+    value next13_target == 934217310162393261013712428) =
+  value_cons #10 8 [2; 4; 2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 2 [4; 2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 4 [2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 2 [1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 1 [7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 7 [3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 3 [1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 1 [0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_cons #10 0 [1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  value_next13_target_tail_18 ();
+  ()
+
+let canonical_next13_reversed () : Lemma (canonical #10 next13_reversed) =
+  assert (canonical #10 [7]);
+  canonical_cons #10 5 [7];
+  canonical_cons #10 8 [5; 7];
+  canonical_cons #10 3 [8; 5; 7];
+  canonical_cons #10 7 [3; 8; 5; 7];
+  canonical_cons #10 9 [7; 3; 8; 5; 7];
+  canonical_cons #10 3 [9; 7; 3; 8; 5; 7];
+  canonical_cons #10 7 [3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 3 [7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 6 [3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 8 [6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 4 [8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 8 [4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 9 [8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 4 [9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 7 [4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 7 [7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 4 [7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 6 [4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 3 [6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 9 [3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 7 [9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 3 [7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 8 [3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 5 [8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 7 [5; 8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  canonical_cons #10 1 [7; 5; 8; 3; 7; 9; 3; 6; 4; 7; 7; 4; 9; 8; 4; 8; 6; 3; 7; 3; 9; 7; 3; 8; 5; 7];
+  ()
+
+let canonical_next13_target () : Lemma (canonical #10 next13_target) =
+  assert (canonical #10 [9]);
+  canonical_cons #10 3 [9];
+  canonical_cons #10 4 [3; 9];
+  canonical_cons #10 2 [4; 3; 9];
+  canonical_cons #10 1 [2; 4; 3; 9];
+  canonical_cons #10 7 [1; 2; 4; 3; 9];
+  canonical_cons #10 3 [7; 1; 2; 4; 3; 9];
+  canonical_cons #10 1 [3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 0 [1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 1 [0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 6 [1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 2 [6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 3 [2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 9 [3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 3 [9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 2 [3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 6 [2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 1 [6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 0 [1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 1 [0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 3 [1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 7 [3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 1 [7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 2 [1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 4 [2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 2 [4; 2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  canonical_cons #10 8 [2; 4; 2; 1; 7; 3; 1; 0; 1; 6; 2; 3; 9; 3; 2; 6; 1; 0; 1; 3; 7; 1; 2; 4; 3; 9];
+  ()
+
+let reverse_digits_next13_source () : Lemma (
+    reverse_digits #10 next13_source == next13_reversed) =
+  ReverseAddNext.canonical_next12_target ();
+  reverse_list_next13_source ();
+  value_next13_reversed ();
+  canonical_next13_reversed ();
+  reverse_digits_canonical #10 next13_source;
+  normalize_value #10 (rev next13_source);
+  assert (value (reverse_digits #10 next13_source) ==
+    758379373684894774639738571);
+  digits_of_nat_of_canonical #10 (reverse_digits #10 next13_source);
+  digits_of_nat_of_canonical #10 next13_reversed;
+  assert (reverse_digits #10 next13_source == next13_reversed);
+  ()
+
+let reverse_add_175837936477498486373973857_to_934217310162393261013712428 () : Lemma (
+    reverse_add #10 next13_source == next13_target) =
+  ReverseAddNext.canonical_next12_target ();
+  reverse_add_value #10 next13_source;
+  ReverseAddNext.value_next12_target ();
+  reverse_digits_next13_source ();
+  value_next13_reversed ();
+  value_next13_target ();
+  assert (value (reverse_add #10 next13_source) ==
+    934217310162393261013712428);
+  reverse_add_canonical #10 next13_source;
+  digits_of_nat_of_canonical #10 (reverse_add #10 next13_source);
+  canonical_next13_target ();
+  digits_of_nat_of_canonical #10 next13_target;
+  assert (reverse_add #10 next13_source == next13_target);
+  ()
+
+let trace_digits_profile_175837936477498486373973857 () : Lemma (
+    trace_digits next13_source == next13_target) =
+  reverse_add_175837936477498486373973857_to_934217310162393261013712428 ();
+  trace_digits_equals_reverse_add next13_source;
+  assert (trace_digits next13_source == next13_target);
+  ()
+
+let trace_profile_shape_175837936477498486373973857 () : Lemma (
+    length (trace_digits next13_source) == length next13_source) =
+  trace_digits_profile_175837936477498486373973857 ();
+  length_of_eq #(digit 10) (trace_digits next13_source) next13_target;
+  assert (length next13_target == length next13_source);
+  ()
+
+let trace_profile_final_carry_175837936477498486373973857 () : Lemma (
+    nth (trace_carries next13_source) (length next13_source) == Some 0) =
+  trace_profile_shape_175837936477498486373973857 ();
+  final_carry_from_length next13_source;
+  ()
+
+let local_profile_witness_934217310162393261013712428 () : Lemma (
+    trace_local_profile_complement_witness next13_target) =
+  ReverseAddNext.canonical_next12_target ();
+  assert (next13_source <> []);
+  trace_profile_shape_175837936477498486373973857 ();
+  trace_profile_final_carry_175837936477498486373973857 ();
+  assert (trace_sum_at next13_source 0 == 8);
+  reverse_add_175837936477498486373973857_to_934217310162393261013712428 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness next13_source;
+  ()
