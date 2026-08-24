@@ -2766,3 +2766,18 @@ let local_profile_witness_906182107397142240703710191608 () : Lemma (
     trace_local_profile_complement_witness digits_906182107397142240703710191608) =
   ReverseAddNext.local_profile_witness_906182107397142240703710191608 ();
   ()
+
+let digits_1712373124704184482497411473217 : numeral 10 =
+  [7; 1; 2; 3; 7; 4; 1; 1; 4; 7; 9; 4; 2; 8; 4; 4; 8; 1; 4; 0; 7; 4; 2; 1; 3; 7; 3; 2; 1; 7; 1]
+
+let reaches_196_1712373124704184482497411473217 () : Lemma (
+    iterate 63 digits_196 == digits_1712373124704184482497411473217) =
+  reaches_196_906182107397142240703710191608 ();
+  iterate_succ #10 62 digits_196;
+  ReverseAddNext.reverse_add_906182107397142240703710191608_to_1712373124704184482497411473217 ();
+  ()
+
+let local_profile_witness_1712373124704184482497411473217 () : Lemma (
+    trace_local_profile_complement_witness digits_1712373124704184482497411473217) =
+  ReverseAddNext.local_profile_witness_1712373124704184482497411473217 ();
+  ()
