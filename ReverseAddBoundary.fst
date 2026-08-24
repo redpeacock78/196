@@ -1188,6 +1188,29 @@ let local_profile_witness_159482241005228405 () : Lemma (
   overflow_witness_85191620502609247 ();
   ()
 
+let trace_profile_159482241005228405 () : Lemma (
+    trace_digits [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1] ==
+      [6; 5; 3; 3; 1; 5; 7; 4; 1; 1; 4; 7; 4; 0; 3; 4; 6; 6] /\
+    trace_carries [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1] ==
+      [0; 0; 0; 1; 1; 1; 0; 0; 0; 0; 0; 0; 0; 0; 1; 1; 1; 0; 0] /\
+    length (trace_digits [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1]) ==
+      length [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1] /\
+    nth (trace_carries [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1])
+      (length [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1]) == Some 0 /\
+    trace_sum_at [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1] 0 == 6) =
+  ReverseAddWitness.trace_profile_facts_159482241005228405_source ();
+  ()
+
+let local_profile_witness_664304741147513356 () : Lemma (
+    trace_local_profile_complement_witness
+      [6; 5; 3; 3; 1; 5; 7; 4; 1; 1; 4; 7; 4; 0; 3; 4; 6; 6]) =
+  ReverseAddWitness.canonical_facts_159482241005228405 ();
+  trace_profile_159482241005228405 ();
+  ReverseAddWitness.reverse_add_159482241005228405_to_664304741147513356 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1];
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();

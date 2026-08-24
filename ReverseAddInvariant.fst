@@ -2148,6 +2148,23 @@ let local_profile_witness_159482241005228405 () : Lemma (
   ReverseAddBoundary.local_profile_witness_159482241005228405 ();
   ()
 
+let digits_664304741147513356 : numeral 10 =
+  [6; 5; 3; 3; 1; 5; 7; 4; 1; 1; 4; 7; 4; 0; 3; 4; 6; 6]
+
+let reaches_196_664304741147513356 () : Lemma (
+    iterate 36 digits_196 == digits_664304741147513356) =
+  reaches_196_159482241005228405 ();
+  iterate_succ #10 35 digits_196;
+  ReverseAddWitness.reverse_add_159482241005228405_to_664304741147513356 ();
+  ()
+
+// The no-overflow outer-sum rule discharges 159482241005228405 -> 664304741147513356.
+let local_profile_witness_664304741147513356 () : Lemma (
+    trace_local_profile_complement_witness
+      digits_664304741147513356) =
+  ReverseAddBoundary.local_profile_witness_664304741147513356 ();
+  ()
+
 // The 196-specific endgame starts from one concrete witness.  The only
 // remaining obligation is the genuinely infinite one-step preservation
 // proof supplied by the caller below.
