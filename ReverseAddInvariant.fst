@@ -2311,3 +2311,18 @@ let conditional_196_local_profile_witness_cases_no_palindrome
       iterate_succ #10 k digits_196;
       reverse_add_local_profile_excludes_palindrome
         (iterate k digits_196)))
+
+let digits_1317620482294916822 : numeral 10 =
+  [2; 2; 8; 6; 1; 9; 4; 9; 2; 2; 8; 4; 0; 2; 6; 7; 1; 3; 1]
+
+let reaches_196_1317620482294916822 () : Lemma (
+    iterate 37 digits_196 == digits_1317620482294916822) =
+  reaches_196_664304741147513356 ();
+  iterate_succ #10 36 digits_196;
+  ReverseAddWitness.reverse_add_664304741147513356_to_1317620482294916822 ();
+  ()
+
+let local_profile_witness_1317620482294916822 () : Lemma (
+    trace_local_profile_complement_witness digits_1317620482294916822) =
+  ReverseAddBoundary.local_profile_witness_1317620482294916822 ();
+  ()

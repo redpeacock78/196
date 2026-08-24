@@ -1238,3 +1238,28 @@ let reverse_add_60744805_output_not_palindrome ()
     trace_palindrome_obstruction_60744805 ();
     reverse_add_palindrome_obstruction_excludes_palindrome
       [5; 0; 8; 4; 4; 7; 0; 6])
+
+let local_profile_witness_1317620482294916822 () : Lemma (
+    trace_local_profile_complement_witness
+      [2; 2; 8; 6; 1; 9; 4; 9; 2; 2; 8; 4; 0; 2; 6; 7; 1; 3; 1]) =
+  let source : numeral 10 =
+    [6; 5; 3; 3; 1; 5; 7; 4; 1; 1; 4; 7; 4; 0; 3; 4; 6; 6] in
+  assert (canonical #10 source);
+  assert (source <> []);
+  assert (trace_digits source ==
+    [2; 2; 8; 6; 1; 9; 4; 9; 2; 2; 8; 4; 0; 2; 6; 7; 1; 3; 1]);
+  assert (trace_carries source ==
+    [0; 1; 1; 0; 0; 0; 0; 1; 0; 0; 0; 0; 1; 1; 0; 0; 0; 1; 1]);
+  assert (length (trace_digits source) == length source + 1);
+  assert (nth (trace_carries source) (length source) == Some 1);
+  assert (trace_sum_at source 0 == 12);
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < length source /\
+      trace_sum_at source i + trace_sum_at source (length source - i) +
+          trace_carry_at source i + trace_carry_at source (length source - i) >=
+        10 + 10 * (trace_carry_at source (i + 1) +
+          trace_carry_at source (length source - i + 1)))
+    3;
+  ReverseAddWitness.reverse_add_664304741147513356_to_1317620482294916822 ();
+  overflow_internal_cell_implies_next_witness source;
+  ()
