@@ -3,6 +3,7 @@ module ReverseAddInvariant
 open ReverseAdd
 open ReverseAddCarry
 open ReverseAddWitness
+open ReverseAddContinuation
 open ReverseAddBoundary
 open ReverseAddHighSum
 open ReverseAddOverflowProfile
@@ -2340,4 +2341,127 @@ let reaches_196_3603815405135183953 () : Lemma (
 let local_profile_witness_3603815405135183953 () : Lemma (
     trace_local_profile_complement_witness digits_3603815405135183953) =
   ReverseAddBoundary.local_profile_witness_3603815405135183953 ();
+  ()
+
+let digits_7197630720180367016 : numeral 10 =
+  [6; 1; 0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7]
+
+let reaches_196_7197630720180367016 () : Lemma (
+    iterate 39 digits_196 == digits_7197630720180367016) =
+  reaches_196_3603815405135183953 ();
+  iterate_succ #10 38 digits_196;
+  ReverseAddContinuation.reverse_add_3603815405135183953_to_7197630720180367016 ();
+  ()
+
+let canonical_7197630720180367016 () : Lemma (
+    canonical #10 [6; 1; 0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7] /\
+    [6; 1; 0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7] <> []) =
+  assert (canonical #10 [7]);
+  canonical_cons #10 1 [7];
+  canonical_cons #10 9 [1; 7];
+  canonical_cons #10 7 [9; 1; 7];
+  canonical_cons #10 6 [7; 9; 1; 7];
+  canonical_cons #10 3 [6; 7; 9; 1; 7];
+  canonical_cons #10 0 [3; 6; 7; 9; 1; 7];
+  canonical_cons #10 7 [0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 2 [7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 0 [2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 1 [0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 8 [1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 0 [8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 3 [0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 6 [3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 7 [6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 0 [7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 1 [0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  canonical_cons #10 6 [1; 0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7];
+  assert ([6; 1; 0; 7; 6; 3; 0; 8; 1; 0; 2; 7; 0; 3; 6; 7; 9; 1; 7] <> []);
+  ()
+
+let local_profile_witness_7197630720180367016 () : Lemma (
+    trace_local_profile_complement_witness digits_7197630720180367016) =
+  assert (canonical #10 [3]);
+  canonical_cons #10 6 [3];
+  canonical_cons #10 0 [6; 3];
+  canonical_cons #10 3 [0; 6; 3];
+  canonical_cons #10 8 [3; 0; 6; 3];
+  canonical_cons #10 1 [8; 3; 0; 6; 3];
+  canonical_cons #10 5 [1; 8; 3; 0; 6; 3];
+  canonical_cons #10 4 [5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 0 [4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 5 [0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 1 [5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 3 [1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 5 [3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 1 [5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 8 [1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 3 [8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 9 [3; 8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 5 [9; 3; 8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  canonical_cons #10 3 [5; 9; 3; 8; 1; 5; 3; 1; 5; 0; 4; 5; 1; 8; 3; 0; 6; 3];
+  assert (canonical #10 digits_3603815405135183953);
+  assert (digits_3603815405135183953 <> []);
+  ReverseAddContinuation.trace_profile_shape_3603815405135183953 ();
+  ReverseAddContinuation.trace_profile_final_carry_3603815405135183953 ();
+  ReverseAddContinuation.trace_profile_sums_3603815405135183953 ();
+  ReverseAddContinuation.reverse_add_3603815405135183953_to_7197630720180367016 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    digits_3603815405135183953;
+  ()
+
+let digits_13305261530450734933 : numeral 10 =
+  [3; 3; 9; 4; 3; 7; 0; 5; 4; 0; 3; 5; 1; 6; 2; 5; 0; 3; 3; 1]
+
+let reaches_196_13305261530450734933 () : Lemma (
+    iterate 40 digits_196 == digits_13305261530450734933) =
+  reaches_196_7197630720180367016 ();
+  iterate_succ #10 39 digits_196;
+  ReverseAddContinuation.reverse_add_7197630720180367016_to_13305261530450734933 ();
+  ()
+
+let local_profile_witness_13305261530450734933 () : Lemma (
+    trace_local_profile_complement_witness digits_13305261530450734933) =
+  ReverseAddContinuation.overflow_precondition_7197630720180367016 ();
+  ReverseAddContinuation.reverse_add_7197630720180367016_to_13305261530450734933 ();
+  overflow_internal_cell_implies_next_witness
+    ReverseAddContinuation.source_7197630720180367016;
+  ()
+
+let digits_47248966933966985264 : numeral 10 =
+  [4; 6; 2; 5; 8; 9; 6; 6; 9; 3; 3; 9; 6; 6; 9; 8; 4; 2; 7; 4]
+
+let reaches_196_47248966933966985264 () : Lemma (
+    iterate 41 digits_196 == digits_47248966933966985264) =
+  reaches_196_13305261530450734933 ();
+  iterate_succ #10 40 digits_196;
+  ReverseAddContinuation.reverse_add_13305261530450734933_to_47248966933966985264 ();
+  ()
+
+let local_profile_witness_47248966933966985264 () : Lemma (
+    trace_local_profile_complement_witness digits_47248966933966985264) =
+  ReverseAddContinuation.no_overflow_precondition_13305261530450734933 ();
+  ReverseAddContinuation.reverse_add_13305261530450734933_to_47248966933966985264 ();
+  no_overflow_outer_sum_1_to_4_cell_implies_next_witness
+    ReverseAddContinuation.source_13305261530450734933;
+  ()
+
+let digits_93507933867933969538 : numeral 10 =
+  [8; 3; 5; 9; 6; 9; 3; 3; 9; 7; 6; 8; 3; 3; 9; 7; 0; 5; 3; 9]
+
+let reaches_196_93507933867933969538 () : Lemma (
+    iterate 42 digits_196 == digits_93507933867933969538) =
+  reaches_196_47248966933966985264 ();
+  iterate_succ #10 41 digits_196;
+  ReverseAddContinuation.reverse_add_47248966933966985264_to_93507933867933969538 ();
+  ()
+
+let local_profile_witness_93507933867933969538 () : Lemma (
+    trace_local_profile_complement_witness digits_93507933867933969538) =
+  ReverseAddContinuation.canonical_47248966933966985264 ();
+  ReverseAddContinuation.trace_profile_shape_47248966933966985264 ();
+  ReverseAddContinuation.trace_profile_final_carry_47248966933966985264 ();
+  ReverseAddContinuation.trace_profile_sums_47248966933966985264 ();
+  ReverseAddContinuation.reverse_add_47248966933966985264_to_93507933867933969538 ();
+  no_overflow_outer_sum_6_to_9_implies_next_witness
+    digits_47248966933966985264;
   ()

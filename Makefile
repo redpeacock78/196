@@ -18,6 +18,7 @@ verify:
 	$(CHECK) ReverseAddCarry.fst
 	$(CHECK) ReverseAddCarrySummary.fst
 	$(CHECK) ReverseAddWitness.fst
+	$(CHECK) ReverseAddContinuation.fst
 	$(CHECK) ReverseAddHighSum.fst
 	$(CHECK) ReverseAddOverflowProfile.fst
 	$(CHECK) ReverseAddBoundary.fst
