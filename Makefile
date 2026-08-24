@@ -22,6 +22,7 @@ verify:
 	$(CHECK) ReverseAddHighSum.fst
 	$(CHECK) ReverseAddOverflowProfile.fst
 	$(CHECK) ReverseAddTail.fst
+	$(CHECK) ReverseAddNext.fst
 	$(CHECK) ReverseAddBoundary.fst
 	$(CHECK) AbstractReachability.fst
 	$(CHECK) ReverseAddResidue.fst
