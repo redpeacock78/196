@@ -1118,6 +1118,76 @@ let local_profile_witness_85191620502609247 () : Lemma (
     [6; 7; 5; 3; 7; 9; 2; 7; 7; 2; 9; 6; 3; 5; 6; 7; 1];
   ()
 
+let trace_profile_85191620502609247 () : Lemma (
+    trace_digits [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] ==
+      [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1] /\
+    trace_carries [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] ==
+      [0; 1; 1; 0; 1; 0; 1; 0; 0; 1; 0; 0; 1; 0; 1; 0; 0; 1] /\
+    length (trace_digits [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]) ==
+      length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] + 1 /\
+    nth (trace_carries [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8])
+      (length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]) == Some 1 /\
+    trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 0 == 15 /\
+    trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 2 == 3 /\
+    trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 15 == 9) =
+  ReverseAddWitness.trace_profile_facts_85191620502609247_source ();
+  ()
+
+let overflow_precondition_85191620502609247 () : Lemma (
+    canonical #10 [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] /\
+    [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] <> [] /\
+    length (trace_digits [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]) ==
+      length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] + 1 /\
+    nth (trace_carries [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8])
+      (length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]) == Some 1 /\
+    1 <= trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 0 /\
+    trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 0 <= 18 /\
+    trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] 0 <> 10 /\
+    exists (i:nat). 0 < i /\
+      i < length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] /\
+      trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] i +
+          trace_sum_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]
+            (length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] - i) +
+          trace_carry_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] i +
+          trace_carry_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]
+            (length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] - i) >=
+        10 + 10 *
+          (trace_carry_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] (i + 1) +
+           trace_carry_at [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]
+             (length [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] - i + 1))) =
+  trace_profile_85191620502609247 ();
+  assert (canonical #10 [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]);
+  assert ([7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] <> []);
+  let source : numeral 10 =
+    [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8] in
+  let n : nat = length source in
+  exists_intro
+    (fun (i:nat) -> 0 < i /\ i < n /\
+      trace_sum_at source i + trace_sum_at source (n - i) +
+          trace_carry_at source i + trace_carry_at source (n - i) >=
+        10 + 10 *
+          (trace_carry_at source (i + 1) +
+           trace_carry_at source (n - i + 1)))
+    2;
+  ()
+
+let overflow_witness_85191620502609247 () : Lemma (
+    trace_local_profile_complement_witness
+      (reverse_add [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8])) =
+  overflow_precondition_85191620502609247 ();
+  overflow_internal_cell_implies_next_witness
+    [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8];
+  ()
+
+let local_profile_witness_159482241005228405 () : Lemma (
+    trace_local_profile_complement_witness
+      [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1]) =
+  ReverseAddWitness.canonical_facts_85191620502609247_source ();
+  trace_profile_85191620502609247 ();
+  ReverseAddWitness.reverse_add_85191620502609247_to_159482241005228405 ();
+  overflow_witness_85191620502609247 ();
+  ()
+
 let trace_palindrome_obstruction_60744805 () : Lemma (
     trace_palindrome_obstruction [5; 0; 8; 4; 4; 7; 0; 6]) =
   trace_palindrome_obstruction_at_60744805 ();

@@ -55,6 +55,7 @@ overflow 段では、現在外側和10を除けば次段外側和1/11が不可�
 続く `4413700670963144 -> 8827391431036288` は no-overflow 外側和 `8` から次の overflow 段へ進むため、`no_overflow_outer_sum_6_to_9_implies_next_witness` を適用しています。
 続く `8827391431036288 -> 17653692772973576` は overflow 外側和 `16` で、内部セル `i=1` の `16 + 16 + 1 + 1 = 34 >= 30` を `overflow_internal_cell_implies_next_witness` へ渡します。
 続く `17653692772973576 -> 85191620502609247` は no-overflow 外側和 `7` なので、`no_overflow_outer_sum_6_to_9_implies_next_witness` を適用しています。
+続く `85191620502609247 -> 159482241005228405` は overflow 外側和 `15` で、内部セル `i=2` の `3 + 9 + 1 + 0 = 13 >= 10 + 10 * (0 + 0) = 10` を `overflow_internal_cell_implies_next_witness` へ渡しています。
 `reverse_trace_palindrome_cases` は任意等幅 trace の回文 output を no-overflow / overflow の二分へ分類します。
 `trace_carry_obstruction` とその soundness 補題は、この二分の両方を排除する状態条件を定義します。
 overflow branch には、外側桁和が `1 + 10 * carry-in` になる必要条件と、その違反を排除する補題もあります。

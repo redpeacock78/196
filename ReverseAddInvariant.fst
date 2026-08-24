@@ -2131,6 +2131,23 @@ let finite_196_candidate_witness_prefix () : Lemma (
   trace_not_candidate_implies_witness (iterate 6 digits_196);
   trace_candidate_witness_implies_not_candidate (iterate 6 digits_196)
 
+let digits_159482241005228405 : numeral 10 =
+  [5; 0; 4; 8; 2; 2; 5; 0; 0; 1; 4; 2; 2; 8; 4; 9; 5; 1]
+
+let reaches_196_159482241005228405 () : Lemma (
+    iterate 35 digits_196 == digits_159482241005228405) =
+  reaches_196_85191620502609247 ();
+  iterate_succ #10 34 digits_196;
+  ReverseAddWitness.reverse_add_85191620502609247_to_159482241005228405 ();
+  ()
+
+// The overflow internal-cell rule discharges 85191620502609247 -> 159482241005228405.
+let local_profile_witness_159482241005228405 () : Lemma (
+    trace_local_profile_complement_witness
+      digits_159482241005228405) =
+  ReverseAddBoundary.local_profile_witness_159482241005228405 ();
+  ()
+
 // The 196-specific endgame starts from one concrete witness.  The only
 // remaining obligation is the genuinely infinite one-step preservation
 // proof supplied by the caller below.
