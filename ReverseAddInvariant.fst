@@ -711,6 +711,7 @@ let digits_1400255515443103 : numeral 10 = [3; 0; 1; 3; 4; 4; 5; 1; 5; 5; 5; 2; 
 let digits_4413700670963144 : numeral 10 = [4; 4; 1; 3; 6; 9; 0; 7; 6; 0; 0; 7; 3; 1; 4; 4]
 let digits_8827391431036288 : numeral 10 = [8; 8; 2; 6; 3; 0; 1; 3; 4; 1; 9; 3; 7; 2; 8; 8]
 let digits_17653692772973576 : numeral 10 = [6; 7; 5; 3; 7; 9; 2; 7; 7; 2; 9; 6; 3; 5; 6; 7; 1]
+let digits_85191620502609247 : numeral 10 = [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]
 
 let value_digits_7436 () : Lemma (value digits_7436 == 7436) = ()
 
@@ -939,6 +940,13 @@ let reaches_196_17653692772973576 () : Lemma (
   reaches_196_8827391431036288 ();
   iterate_succ #10 32 digits_196;
   reverse_add_8827391431036288_to_17653692772973576 ();
+  ()
+
+let reaches_196_85191620502609247 () : Lemma (
+    iterate 34 digits_196 == digits_85191620502609247) =
+  reaches_196_17653692772973576 ();
+  iterate_succ #10 33 digits_196;
+  reverse_add_17653692772973576_to_85191620502609247 ();
   ()
 
 let finite_196_indexed_witnesses () : Lemma (
@@ -1831,6 +1839,13 @@ let local_profile_witness_17653692772973576 () : Lemma (
     trace_local_profile_complement_witness
       [6; 7; 5; 3; 7; 9; 2; 7; 7; 2; 9; 6; 3; 5; 6; 7; 1]) =
   ReverseAddBoundary.local_profile_witness_17653692772973576 ();
+  ()
+
+// The no-overflow outer-sum rule discharges 17653692772973576 -> 85191620502609247.
+let local_profile_witness_85191620502609247 () : Lemma (
+    trace_local_profile_complement_witness
+      [7; 4; 2; 9; 0; 6; 2; 0; 5; 0; 2; 6; 1; 9; 1; 5; 8]) =
+  ReverseAddBoundary.local_profile_witness_85191620502609247 ();
   ()
 
 let finite_196_candidate_prefix () : Lemma (
